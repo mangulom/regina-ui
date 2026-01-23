@@ -1,0 +1,392 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden !important;
+  margin: 0;
+  padding: 0;
+  /* Aplicar la fuente aquí */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  width: 50%;
+}
+
+/* login.component.css */
+.btn-casa-container {
+  position: relative;
+  justify-items: center;
+  align-items: center;
+}
+
+.btn-casa {
+  background-color: #3e3f3e;
+  width: 200px;
+  color: white;
+  height: 45px;
+  border-radius: 15px;
+  border: solid 2px #ffffff;
+}
+
+/* password y boton para mostrar el password */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding: 10px 40px 10px 40px; // Espacio suficiente para íconos
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+}
+
+.icono {
+  position: fixed;
+  left: -20px !important;
+  padding-top: 0px;
+  margin-top: 0px;
+  top: -2px;
+  transform: translateY(-2px);
+  color: #aaa;
+}
+
+/* aca termina el input-container */
+
+.login-container {
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background-color: #0063A7;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* centra respecto al propio tamaño */
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.spinner-container {
+  position: fixed; /* Usa fixed para que no dependa del contenedor padre */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 110%; /* Ajusta a tamaño real necesario, no 510px */
+  height: 110%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  z-index: 1000;
+  pointer-events: none; /* evita interferencias con clics */
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-top: 5px solid #ffffff;
+  border-bottom: 5px solid #ffffff;
+  animation:
+    spin 4s linear infinite,
+    glow 2.5s infinite alternate;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px #008cff;
+  }
+
+  to {
+    box-shadow: 0 0 20px #008cff;
+  }
+}
+
+.login-form {
+  z-index: 1;
+  text-align: center;
+  //background: #0d104d;
+  padding: 2px;
+  border-radius: 50%;
+  color: #ffffff;
+  /* height: 500px; */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+}
+
+input {
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+button {
+  max-width: 260px;
+  background: #008cff;
+  color: rgb(255, 255, 255);
+  padding: 5px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  position: absolute;
+  top: -10px;
+  /* Ajusta según sea necesario */
+  left: 10px;
+  /* Ajusta según sea necesario */
+  font-size: 12px;
+  /* O el tamaño que desees */
+  color: #555;
+  /* Color de la etiqueta */
+  transition: 0.2s;
+}
+
+input:focus + .form-label,
+input:not(:placeholder-shown) + .form-label {
+  top: -20px;
+  color: #007bff;
+}
+
+button:hover {
+  background: #0268bb;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #008cff;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.otp-inputs {
+  display: flex;
+  gap: 6px;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.otp-inputs input {
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.otp-inputs input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.otp-container {
+  text-align: center;
+  justify-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-otp {
+  color: white !important;
+}
+
+ng-select {
+  width: 300px;
+  margin: 0px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.8rem;
+
+  .ng-select-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #fff;
+
+    &:focus-within {
+      border-color: #007bff;
+    }
+  }
+
+  .ng-option {
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.ng-option-selected {
+      background-color: #007bff;
+      color: #fff;
+    }
+  }
+
+  .ng-select-placeholder {
+    color: #999;
+  }
+}
+
+::ng-deep.bs-datepicker-head button.current:nth-child(3) {
+  display: none;
+}
+
+.login-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  animation: slideshow 42s infinite;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(13, 16, 77, 0.75); /* antes 0.6, ahora 0.3 */
+  z-index: -1;
+}
+
+@keyframes slideshow {
+  0% {
+    background-image: url("/sai-web/assets/bg/4d85b-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-4-4.jpg");
+  }
+  12% {
+    background-image: url("/sai-web/assets/bg/7f8ef-02-2.jpg");
+  }
+  22% {
+    background-image: url("/sai-web/assets/bg/4d533-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-5-5.jpg");
+  }
+  33% {
+    background-image: url("/sai-web/assets/bg/3ae28-red-vial-n-6-construccion-y-mantenimiento-de-la-carretera-panamericana-sur-puente-pucusana-cerro-azul-ica-01.jpg");
+  }
+  43% {
+    background-image: url("/sai-web/assets/bg/c3aae-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-2-2.jpg");
+  }
+  53% {
+    background-image: url("/sai-web/assets/bg/e3c0f-02-1.jpg");
+  }
+  63% {
+    background-image: url("/sai-web/assets/bg/d37a0-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-3.jpg");
+  }
+  73% {
+    background-image: url("/sai-web/assets/bg/c6c6e-red-vial-n-6-construccion-y-mantenimiento-de-la-carretera-panamericana-sur-puente-pucusana-cerro-azul-ica-01-1.jpg");
+  }
+  83% {
+    background-image: url("/sai-web/assets/bg/e6b30-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-1-2.jpg");
+  }
+  93% {
+    background-image: url("/sai-web/assets/bg/76695-mejoramiento-y-rehabilitacion-de-la-carretera-mazamari-pangoa-cubantia-1-1.jpg");
+  }
+  100% {
+    background-image: url("/sai-web/assets/bg/4d85b-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-4-4.jpg");
+  }
+}
+
+.select {
+  height: 45px !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 0.8rem !important;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group-text {
+  background-color: transparent;
+  border: none; /* Elimina el borde del ícono */
+}

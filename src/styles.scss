@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* Cargar fuente */
+@font-face {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  src: url('assets/fonts/Hind-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Aplicar fuente globalmente */
+:root {
+  --app-font-family: 'Hind', Arial, sans-serif;
+}
+
+html, body {
+  font-family: var(--app-font-family);
+}

@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+:host {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+}
+body {
+  font-family: 'Poppins', sans-serif !important;
+}
+:host::ng-deep {
+  .ng-scrollbar {
+    --scrollbar-padding: 1px;
+    --scrollbar-size: 5px;
+    --scrollbar-thumb-color: var(--cui-gray-500, #aab3c5);
+    --scrollbar-thumb-hover-color: var(--cui-gray-400, #cfd4de);
+    --scrollbar-hover-size: calc(var(--scrollbar-size) * 1.5);
+    --scrollbar-border-radius: 5px;
+  }
+
+  c-sidebar-header {
+    //background-color: white !important;
+  }
+
+  c-sidebar {
+    //width: 400px;
+  }
+
+  .ng-scroll-content {
+    display: flex;
+    min-height: 100%;
+  }
+
+  //.sidebar-nav {
+  //  scrollbar-color: var(--cui-gray-500, #444) transparent;
+  //}
+}
+
+// ng-scrollbar css variables
+//.cui-scrollbar {
+//  --scrollbar-border-radius: 7px;
+//  --scrollbar-padding: 1px;
+//  --scrollbar-viewport-margin: 0;
+//  --scrollbar-track-color: transparent;
+//  --scrollbar-wrapper-color: transparent;
+//  --scrollbar-thumb-color: rgba(0, 0, 0, 0.2);
+//  --scrollbar-thumb-hover-color: var(--scrollbar-thumb-color);
+//  --scrollbar-size: 5px;
+//  --scrollbar-hover-size: var(--scrollbar-size);
+//  --scrollbar-thumb-transition: height ease-out 150ms, width ease-out 150ms;
+//  --scrollbar-track-transition: height ease-out 150ms, width ease-out 150ms;
+//}
+
+
+.child-item {
+  font-size: 30px !important; /* Ajusta el tamaño de la fuente como desees */
+  padding-left: 12px !important; /* Ajusta el padding izquierdo como desees */
+  color: cyan;
+}
+
+.child-menu {
+  padding-left: 30px !important; /* Agrega un poco de margen para diferenciar los hijos */
+}
+
+.toggle-button {
+  position: fixed; /* Fija el botón en la pantalla */
+  top: 20px; /* Ajusta la posición vertical */
+  right: 20px; /* Ajusta la posición horizontal */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.container {
+  margin: 0;
+  padding-top: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+/* Estilos para el botón en forma de pestaña */
+.tab-button {
+  position: fixed;
+  top: 50%; /* Centrado verticalmente */
+  right: 0; /* Pegado al borde derecho */
+  background-color: #1b0e68bb;
+  border: solid 3 0.9;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50px 0 0 50px; /* Bordes redondeados en el lado izquierdo */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transform: translateY(-50%); /* Centrado verticalmente */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+}
+
+.tab-icon {
+  width: 24px; /* Ajusta el tamaño de la imagen */
+  height: 24px; /* Ajusta el tamaño de la imagen */
+  margin-right: 5px; /* Espacio entre la imagen y el texto */
+}
+
+.tab-label {
+  font-weight: bold;
+}
+
+/* Cambiar el color de los elementos hijos */
+.c-sidebar-nav .nav-item .child-item a {
+    color: #007bff; /* Cambia a tu color deseado */
+}
+
+/* Cambiar el color al pasar el ratón */
+.c-sidebar-nav .nav-item .child-item a:hover {
+    color: #0056b3; /* Color al pasar el ratón */
+}
+
+.sidebar-nav .nav-link.active {
+  color: red !important
+}

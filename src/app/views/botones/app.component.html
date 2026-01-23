@@ -1,0 +1,49 @@
+<main class="main">
+  <div class="content">
+    <div class="left-side">
+      <navbar-footer [items]="items"></navbar-footer>
+      <h4>AQUARIUS CONSULTING - Rendición de Cuentas </h4><br />
+      <div *ngIf="deviceService.isDesktopDevice()">
+        <general-button label="Guardar" color="SUCCESS" icon="fas fa-save"></general-button>
+        <general-button label="Eliminar" color="DANGER" icon="fas fa-trash"></general-button>
+        <general-button label="Atención" color="WARNING" icon="fas fa-exclamation"></general-button>
+        <general-button label="Visor" color="INFO" icon="fas fa-eye"></general-button>
+        <general-button label="Nuevo" color="PRIMARY" icon="fas fa-plus"></general-button>
+        <general-button label="Regresar" color="SECONDARY" icon="fas fa-undo"></general-button>
+        <general-button label="Oscuro" color="DARK" icon="fas fa-moon"></general-button>
+        <general-button label="Claro" color="LIGHT" icon="fas fa-sun"></general-button>
+      </div>
+    </div>
+    <div>
+      <div *ngIf="deviceService.isMobileDevice()">
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+
+          <hold-expand-button label="Guardar" icon="fas fa-save" color="PRIMARY">
+          </hold-expand-button>
+
+          <hold-expand-button label="Aceptar" icon="fas fa-check" color="SUCCESS">
+          </hold-expand-button>
+
+          <hold-expand-button label="Eliminar" icon="fas fa-trash" color="DANGER">
+          </hold-expand-button>
+
+          <hold-expand-button label="Advertir" icon="fas fa-exclamation-triangle" color="WARNING">
+          </hold-expand-button>
+
+          <hold-expand-button label="Info" icon="fas fa-info-circle" color="INFO">
+          </hold-expand-button>
+
+          <hold-expand-button label="Opciones" icon="fas fa-cog" color="SECONDARY">
+          </hold-expand-button>
+
+          <hold-expand-button label="Bloquear" icon="fas fa-lock" color="DARK">
+          </hold-expand-button>
+
+          <hold-expand-button label="Ver" icon="fas fa-eye" color="LIGHT">
+          </hold-expand-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<router-outlet />
