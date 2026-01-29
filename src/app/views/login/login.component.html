@@ -21,7 +21,8 @@
           <i class="fas fa-lock"></i>
           <input [type]="showPassword ? 'text' : 'password'" name="password" id="password" [(ngModel)]="dtoUser.userPassword"
             class="form-control input-all" placeholder="Contraseña" required #passwordInput="ngModel">
-          <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+          
+            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
             <div class="icono">
               <i [class]="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
             </div>
@@ -31,8 +32,8 @@
 
 
       <div class="btn-casa-container">
-        <general-button [disabled]="pendingOk" label="Ingresar" (click)="onLogin()" color="PRIMARY"
-          icon="fas fa-sign-in"></general-button>
+        <button *ngIf="!pendingOk" type="button" class="btn btn-primary btn-sm boton-inicio" [disabled]="pendingOk" (click)="onLogin()">
+          <i class="fas fa-sign-in"></i>  Iniciar Sesión</button>
         <span *ngIf="pendingOk" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
         <span *ngIf="pendingOk" role="status"> Enviando...</span>
       </div>

@@ -2,9 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Response } from '../models/response';
 import { RegSecUser } from '../models/reg-sec-user';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { NavItem } from '../models/globals/nav-item';
+import { RegSecPermissions } from '../models/reg-sec-permissions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-    private secretKey = '4qvr1v520251234z'; // Debe ser de 16, 24 o 32 bytes
+  private secretKey = '4qvr1v520251234z'; // Debe ser de 16, 24 o 32 bytes
   private authStatusListener = new BehaviorSubject<boolean>(this.isLoggedIn());
 
   apiurlAuth = environment.apiUrlAuth;
@@ -89,5 +92,56 @@ export class AuthService {
     return this.http.put(`${this.apiurlAuth}usuario/change-password`, dto, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
+  }
+
+  obtenerItemsMenu(idUsuario: number, codEmpresa: string): Observable<NavItem[]> {
+    const url = `${this.apiurlAuth}/api/permissions/listar-permisos?userId=${idUsuario}&codEmpresa=${codEmpresa}`;
+
+    return this.http.get<{ resultado: RegSecPermissions[] }>(url).pipe(
+      map(response => this.convertPermissionsToMenu(response.resultado))
+    );
+  }
+
+  convertPermissionsToMenu(data: RegSecPermissions[]): NavItem[] {
+
+    // 1️⃣ Filtrar solo visibles
+    const visibles = data.filter(p => p.permitView === true);
+
+    // 2️⃣ Crear mapa por ID
+    const map = new Map<number, NavItem & { id: number; parentId: number | null }>();
+
+    visibles.forEach(p => {
+      if (typeof p.menuId === 'number') {
+        map.set(p.menuId, {
+          id: p.menuId,
+          parentId: p.menuParentId ?? null,
+          label: p.menuLabel,
+          icon: p.menuIcon,
+          route: p.menuRoute || undefined,
+          expanded: false,
+          subitems: []
+        });
+      }
+    });
+
+    const roots: NavItem[] = [];
+
+    map.forEach(item => {
+      if (item.parentId === null) {
+        roots.push(item);
+      } else {
+        const parent = map.get(item.parentId);
+        if (parent) {
+          parent.subitems!.push(item);
+        }
+      }
+    });
+
+    roots.forEach(r => {
+      if (r.subitems && r.subitems.length === 0) {
+        delete r.subitems;
+      }
+    });
+    return roots;
   }
 }

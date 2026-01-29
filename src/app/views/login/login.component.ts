@@ -83,6 +83,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               sessionStorage.setItem('isLoggedIn', 'true');
               sessionStorage.setItem('authToken', this.authToken);
               sessionStorage.setItem('user', JSON.stringify(response.resultado));
+              this.dtoUser = response.resultado;
               this.windowForm = 2;
               this.onIngresar();
             }
@@ -118,6 +119,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           sessionStorage.setItem('isLoggedIn', 'true');
           sessionStorage.setItem('authToken', this.authToken);
           sessionStorage.setItem('user', JSON.stringify(response.resultado));
+          this.dtoUser = response.resultado;
           this.onIngresar();
         } else {
           Swal.fire({
@@ -140,9 +142,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onIngresar() {
-    console.log("llegué aquí");
+    
     this.router.navigate(['/list-orders']);
-    //this.getConfiguracionSistema();
+    this.getConfiguracionSistema();
   }
 
   moveToNext(event: Event, index: number): void {

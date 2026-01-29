@@ -1,0 +1,90 @@
+<div class="container mt-2">
+  <div class="bar-buttons-top">
+    <div class="title-f6">Lista de Órdenes de Pago</div>
+  </div>
+  <div class="bar-buttons-top d-flex justify-content-end w-100">
+    <button class="general-button btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+      Regresar
+    </button>
+  </div>
+  <div class="table-container table-responsive">
+    <table class="table global-table table-striped table-hover">
+      <thead>
+        <th class="text-center" *ngFor="let column of columns">
+          {{column.label}}
+        </th>
+        <th class="text-center">Acciones</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of data">
+          <td class="text-center">{{reg.numOrden}}</td>
+          <td class="text-center">{{reg.fecOrden | date: 'dd/MM/yyyy'}}</td>
+          <td class="text-center">{{reg.cDesTipoGasto}}</td>
+          <td class="text-center">{{reg.cDesMoneda}}</td>
+          <td class="text-center">{{reg.impOrdPago}}</td>
+          <td class="text-center">{{reg.cDesTado}}</td>
+          <td class="text-center">
+            <button type="button" title="Rendir cuenta" type="button" class="btn btn-success btn-sm me-1"><i
+                class="fa fa-plus"></i></button>
+            <button style="background-color: #0063A7;" title="Ver Detalle" type="button"
+              class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- PRIMARY -->
+    <button class="general-button btn-primary">
+      <i class="fas fa-save"></i>
+      Guardar
+    </button>
+
+    <!-- SUCCESS -->
+    <button class="general-button btn-success">
+      <i class="fas fa-check-circle"></i>
+      Confirmar
+    </button>
+
+    <!-- DANGER -->
+    <button class="general-button btn-danger">
+      <i class="fas fa-trash"></i>
+      Eliminar
+    </button>
+
+    <!-- WARNING -->
+    <button class="general-button btn-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      Advertencia
+    </button>
+
+    <!-- INFO -->
+    <button class="general-button btn-info">
+      <i class="fas fa-info-circle"></i>
+      Información
+    </button>
+
+    <!-- SECONDARY -->
+    <button class="general-button btn-secondary">
+      <i class="fas fa-sliders-h"></i>
+      Configurar
+    </button>
+
+    <!-- DARK -->
+    <button class="general-button btn-dark">
+      <i class="fas fa-moon"></i>
+      Modo oscuro
+    </button>
+
+    <!-- LIGHT -->
+    <button class="general-button btn-light">
+      <i class="fas fa-arrow-left"></i>
+      Regresar
+    </button>
+
+    <!-- DISABLED -->
+    <button class="general-button btn-primary" disabled>
+      <i class="fas fa-ban"></i>
+      Bloqueado
+    </button>
+  </div>
+</div>

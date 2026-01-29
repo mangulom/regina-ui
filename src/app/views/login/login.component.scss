@@ -1,15 +1,9 @@
-/* Aplicar fuente globalmente */
-:root {
-  --app-font-family: 'Hind', Arial, sans-serif;
-}
-
 html,
 body {
   height: 100%;
   overflow: hidden !important;
   margin: 0;
   padding: 0;
-  font-family: var(--app-font-family);
 }
 
 * {
@@ -347,57 +341,6 @@ ng-select {
   z-index: -1;
 }
 
-@keyframes slideshow {
-  0% {
-    background-image: url("/sai-web/assets/bg/4d85b-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-4-4.jpg");
-  }
-
-  12% {
-    background-image: url("/sai-web/assets/bg/7f8ef-02-2.jpg");
-  }
-
-  22% {
-    background-image: url("/sai-web/assets/bg/4d533-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-5-5.jpg");
-  }
-
-  33% {
-    background-image: url("/sai-web/assets/bg/3ae28-red-vial-n-6-construccion-y-mantenimiento-de-la-carretera-panamericana-sur-puente-pucusana-cerro-azul-ica-01.jpg");
-  }
-
-  43% {
-    background-image: url("/sai-web/assets/bg/c3aae-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-2-2.jpg");
-  }
-
-  53% {
-    background-image: url("/sai-web/assets/bg/e3c0f-02-1.jpg");
-  }
-
-  63% {
-    background-image: url("/sai-web/assets/bg/d37a0-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-3.jpg");
-  }
-
-  73% {
-    background-image: url("/sai-web/assets/bg/c6c6e-red-vial-n-6-construccion-y-mantenimiento-de-la-carretera-panamericana-sur-puente-pucusana-cerro-azul-ica-01-1.jpg");
-  }
-
-  83% {
-    background-image: url("/sai-web/assets/bg/e6b30-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-1-2.jpg");
-  }
-
-  93% {
-    background-image: url("/sai-web/assets/bg/76695-mejoramiento-y-rehabilitacion-de-la-carretera-mazamari-pangoa-cubantia-1-1.jpg");
-  }
-
-  100% {
-    background-image: url("/sai-web/assets/bg/4d85b-construccion-de-la-carretera-autopista-del-sol-tramo-sullana-trujillo-4-4.jpg");
-  }
-}
-
-.select {
-  height: 45px !important;
-  font-size: 0.8rem !important;
-}
-
 .input-group {
   display: flex;
   align-items: center;
@@ -413,4 +356,13 @@ ng-select {
   font-size: 0.8remm !important;
   width: 200px !important;
   border-radius: 15px !important;
+}
+
+.boton-inicio {
+  margin-top: 0px !important;
+  border-radius: 15px !important;
+  background-color: rgb(18, 18, 78);
+  border: 2px solid white !important;
+  height: 38px !important;
+  width: 160px !important;
 }

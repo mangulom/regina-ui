@@ -2,13 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-interface NavbarItem {
-  label: string;
-  icon?: string;
-  route?: string;
-  subitems?: NavbarItem[];
-}
+import { NavItem } from '../../../../models/globals/nav-item';
 
 @Component({
   selector: 'app-default-footer-mobile',
@@ -21,13 +15,24 @@ export class DefaultFooterMobileComponent {
 
   constructor(private router: Router) {}
 
-  items: NavbarItem[] = [
+  items: NavItem[] = [
     {
       label: 'Procesos',
       icon: 'fas fa-cog',
+      expanded: false,
       subitems: [
         { label: 'Órdenes de Pago', icon: 'fa-solid fa-list', route: '/list-orders' },
-        { label: 'Seguridad', icon: 'fas fa-user-shield', route: '/roles' }
+        { label: 'Solicitudes', icon: 'fas fa-user-shield', route: '' }
+      ]
+    },
+    {
+      label: 'Seguridad',
+      icon: 'fas fa-shield',
+      expanded: false,
+      subitems: [
+        { label: 'Usuarios', icon: 'fa-solid fa-list', route: '' },
+        { label: 'Perfiles', icon: 'fa-regular fa-address-card', route: '' },
+        { label: 'Permisos', icon: 'fas fa-lock', route: '' }
       ]
     },
     {

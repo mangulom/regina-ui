@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Hind';
-  src: url('assets/fonts/Hind-Regular.ttf') format('truetype');
+  src: url('./assets/fonts/Hind-Regular.ttf') format('truetype');
   font-style: normal;
   font-display: swap;
 }
@@ -96,18 +96,14 @@ app-sidebar {
   border-radius: var(--card-radius);
   border: 3px solid var(--primary-color);
 
-  background: color-mix(
-    in srgb,
-    var(--primary-color) 6%,
-    transparent
-  );
+  background: color-mix(in srgb,
+      var(--primary-color) 6%,
+      transparent);
 
   box-shadow:
-    0 6px 14px color-mix(
-      in srgb,
+    0 6px 14px color-mix(in srgb,
       var(--primary-color) 25%,
-      transparent
-    );
+      transparent);
 
   padding: 16px;
   transition: all 0.25s ease;
@@ -115,11 +111,9 @@ app-sidebar {
 
 .theme-card:hover {
   box-shadow:
-    0 10px 22px color-mix(
-      in srgb,
+    0 10px 22px color-mix(in srgb,
       var(--primary-color) 40%,
-      transparent
-    );
+      transparent);
 }
 
 /* ==========================
@@ -133,17 +127,21 @@ app-sidebar {
 
 .table-responsive {
   width: 100%;
-  overflow-x: auto; /* Permite scroll horizontal */
-  -webkit-overflow-scrolling: touch; /* Suaviza scroll en iOS */
+  overflow-x: auto;
+  /* Permite scroll horizontal */
+  -webkit-overflow-scrolling: touch;
+  /* Suaviza scroll en iOS */
 }
 
 .global-table {
   width: 100%;
-  min-width: 600px; /* Ajusta al contenido mínimo de la tabla */
+  min-width: 600px;
+  /* Ajusta al contenido mínimo de la tabla */
   border-collapse: collapse;
 }
 
-.global-table th, .global-table td {
+.global-table th,
+.global-table td {
   padding: 8px;
   border: 1px solid #ccc;
   text-align: left;
@@ -151,10 +149,11 @@ app-sidebar {
 
 table {
   width: 100%;
-  border-radius: 18px;
+  border-radius: 9px;
   overflow: hidden;
-  border-collapse: separate;
+  border-collapse: collapse;
   font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 table thead th {
@@ -175,6 +174,125 @@ table thead th {
   justify-content: space-between;
   margin-bottom: 12px;
 }
+
+.title-f6 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgba(97, 97, 97);
+}
+
+
+/* ==========================
+  GENERAL-BUTTON
+  Botón base
+========================== */
+button.general-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 1rem;
+  padding: 14px 26px;
+  border-radius: 20px;
+  border: none;
+  background: #0063A7;
+  color: white;
+  cursor: pointer;
+
+  box-shadow: none;
+
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* ==========================
+   Borde interior
+========================== */
+
+button.general-button::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 2px solid rgba(255,255,255,0.9);
+  border-radius: 16px;
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
+
+/* LIGHT → borde gris */
+button.general-button.btn-light::before {
+  border-color: #adb5bd;
+}
+
+/* ==========================
+   Hover
+========================== */
+
+button.general-button:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+button.general-button.btn-light:hover {
+  background-color: #e9ecef;
+}
+
+/* ==========================
+   Active
+========================== */
+
+button.general-button:active {
+  transform: translateY(1px) scale(0.97);
+  filter: brightness(0.9);
+}
+
+button.general-button:active::before {
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* ==========================
+   Colores Bootstrap
+========================== */
+
+button.general-button.btn-primary   { background-color: #0063a7; }
+button.general-button.btn-success   { background-color: #198754; }
+button.general-button.btn-danger    { background-color: #dc3545; }
+button.general-button.btn-warning   { background-color: #ffc107; color: #212529; }
+button.general-button.btn-info      { background-color: #1192d1; color: #212529; }
+button.general-button.btn-secondary { background-color: #6c757d; }
+button.general-button.btn-dark      { background-color: #212529; }
+
+button.general-button.btn-light {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+/* ==========================
+   Disabled
+========================== */
+
+button.general-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+/* ==========================
+   Icono
+========================== */
+
+button.general-button i {
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
 
 
 html body,

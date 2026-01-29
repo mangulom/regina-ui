@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
-import { Router} from '@angular/router';
+import { Component, HostListener, input, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { RegSecUser } from '../../../../models/reg-sec-user';
 
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { DeviceService } from '../../../../services/core-service/device.service';
 
 @Component({
   selector: 'app-default-header',
@@ -14,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   schemas: [NO_ERRORS_SCHEMA]
 })
-export class DefaultHeaderComponent  implements OnInit {
+export class DefaultHeaderComponent implements OnInit {
   nombresCompletos: string = '';
   empresa: string = '';
   user: RegSecUser = JSON.parse(sessionStorage.getItem('user') || '{}');
@@ -38,6 +39,8 @@ export class DefaultHeaderComponent  implements OnInit {
   ];
 
   periodo: string = '';
+  muestraBotonToogle: boolean = false;
+  dtoUser: RegSecUser = new RegSecUser();
 
   private subscription: Subscription = new Subscription();
 
@@ -47,13 +50,20 @@ export class DefaultHeaderComponent  implements OnInit {
     { name: 'auto', text: 'Auto', icon: 'cilContrast' }
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public deviceService: DeviceService) {
 
   }
   ngOnInit(): void {
+    this.muestraBotonToogle = this.deviceService.isDesktopDevice();
     this.nombresCompletos = sessionStorage.getItem('nombresCompletos') || '';
     this.empresa = sessionStorage.getItem('razonSocial') || '';
     this.periodo = (this.meses.find(m => m.value === parseInt(sessionStorage.getItem('periodo_month') || ''))?.nombre ?? '') + ' del ' + sessionStorage.getItem('periodo_year');
+  
+    //RECUPERA DATOS DEL SESSION STORAGE
+    const userString = sessionStorage.getItem("user");
+    this.dtoUser = userString ? JSON.parse(userString) : new RegSecUser();
+    console.log("Dto ", this.dtoUser.userEmail);
+  
   }
 
   toggleDropdown() {
@@ -62,6 +72,17 @@ export class DefaultHeaderComponent  implements OnInit {
 
   onToggleSidebar() {
 
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const userArea = document.querySelector('.user-area') as HTMLElement;
+
+    // Cierra el dropdown si el clic está fuera del área de usuario
+    if (userArea && !userArea.contains(target)) {
+      this.showDropdown = false;
+    }
   }
 
 

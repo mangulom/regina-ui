@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { User } from '../../models/user';
+import { User } from '../../../models/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OrdenPago } from '../../models/orden-pago';
+import { OrdenPago } from '../../../models/orden-pago';
 
 @Component({
   selector: 'app-list-orden-pago',

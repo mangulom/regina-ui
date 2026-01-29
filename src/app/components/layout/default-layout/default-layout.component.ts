@@ -32,9 +32,8 @@ export class DefaultLayoutComponent implements OnInit {
   isDesktop: boolean = true;
 
   ngOnInit(): void {
-    this.isDesktop = !this.deviceService.isDesktopDevice();
+    this.isDesktop = this.deviceService.isDesktopDevice();
   }
-
 
   getUserRole(): string {
     const userString = sessionStorage.getItem('user');
