@@ -9,7 +9,7 @@ import { DeviceService } from '../../../services/core-service/device.service';
 import { DefaultFooterMobileComponent } from '../../layout/default-layout/default-footer-mobile/default-footer-mobile.component';
 import { DefaultFooterComponent } from './default-footer/default-footer.component';
 
-import { ReginaIaService } from '../../../services/regina-ia.service'; // <-- agregado
+import { ReginaIaService } from '../../../services/regina-ia.service';
 import { finalize } from 'rxjs/operators';
 
 interface ChatMessage {
@@ -38,7 +38,7 @@ export class DefaultLayoutComponent implements OnInit {
     private router: Router,
     public deviceService: DeviceService,
     private zone: NgZone,
-    private reginaService: ReginaIaService // <-- inyección del servicio
+    private reginaService: ReginaIaService
   ) {}
 
   user = sessionStorage.getItem('user')
@@ -77,7 +77,7 @@ export class DefaultLayoutComponent implements OnInit {
 
     if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
-      this.recognition.lang = 'es-ES';
+      this.recognition.lang = 'es-PE';
       this.recognition.continuous = false;
       this.recognition.interimResults = false;
     }
@@ -92,7 +92,6 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   enviarTexto(): void {
-
     const texto = this.userInput?.trim();
     if (!texto) return;
 
@@ -103,16 +102,13 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   hablar(): void {
-
     if (!this.recognition) {
       alert('El reconocimiento de voz no está soportado en este navegador.');
       return;
     }
 
     this.recognition.onresult = (event: any) => {
-
       const texto = event.results[0][0].transcript;
-
       this.zone.run(() => {
         this.userInput = texto;
         this.enviarTexto();
@@ -122,14 +118,9 @@ export class DefaultLayoutComponent implements OnInit {
     this.recognition.start();
   }
 
-  /* =========================================
-     Lógica principal de Regina
-     ========================================= */
-
   private procesarPregunta(texto: string): void {
 
     const textoNormalizado = texto.toLowerCase().trim();
-
     const nombre = this.nombreUsuario
       ? this.capitalizar(this.nombreUsuario.toLowerCase())
       : '';
@@ -137,93 +128,63 @@ export class DefaultLayoutComponent implements OnInit {
     const esSaludo = /(hola|buenos días|buenas tardes|buenas noches|buen dia|buenas)/i
       .test(textoNormalizado);
 
-    // ------------------------------------------------
-    // 1. Si el usuario saluda → responder saludo
-    // ------------------------------------------------
     if (esSaludo) {
-
       const saludoHora = this.obtenerSaludoPorHora();
-
       const respuestaSaludo = nombre
-        ? `${saludoHora} ${nombre}. ¿En qué te puedo ayudar?`
-        : `${saludoHora}. ¿En qué te puedo ayudar?`;
-
+        ? `${saludoHora} ${nombre}! Qué gusto verte, ¿en qué puedo ayudarte hoy?`
+        : `${saludoHora}! Qué gusto verte, ¿en qué puedo ayudarte hoy?`;
       this.messages.push({ from: 'bot', text: respuestaSaludo });
-      this.hablarTexto(respuestaSaludo);
-
+      this.hablarTexto(respuestaSaludo, true);
       this.saludoInicialMostrado = true;
       return;
     }
 
-    // ------------------------------------------------
-    // 2. Saludo automático inicial
-    // ------------------------------------------------
     if (!this.saludoInicialMostrado) {
-
       this.saludoInicialMostrado = true;
-
       const saludoHora = this.obtenerSaludoPorHora();
-
       const saludoInicial = nombre
-        ? `${saludoHora} ${nombre}, soy Regina. Un gusto ayudarte. ¿En qué te puedo apoyar hoy?`
-        : `${saludoHora}, soy Regina. Un gusto ayudarte. ¿En qué te puedo apoyar hoy?`;
-
+        ? `${saludoHora} ${nombre}! Soy Regina y estoy feliz de ayudarte. ¿Qué necesitas hoy?`
+        : `${saludoHora}! Soy Regina y estoy feliz de ayudarte. ¿Qué necesitas hoy?`;
       this.messages.push({ from: 'bot', text: saludoInicial });
-      this.hablarTexto(saludoInicial);
+      this.hablarTexto(saludoInicial, true);
     }
 
-    // ------------------------------------------------
-    // 3. Llamada al webservice de Regina
-    // ------------------------------------------------
     this.reginaService.enviarPregunta(texto)
-      .pipe(finalize(() => {
-        // Puedes agregar algún loader si deseas
-      }))
+      .pipe(finalize(() => {}))
       .subscribe({
         next: (res: any) => {
-          const respuesta = res.respuesta || 'No se obtuvo respuesta del servicio';
+          const respuesta = res.respuesta || 'No entendí eso, ¿podrías repetirlo?';
           this.messages.push({ from: 'bot', text: respuesta });
           this.hablarTexto(respuesta);
         },
         error: (err) => {
           console.error(err);
-          const errorTexto = 'Error al comunicarse con el servicio de Regina.';
+          const errorTexto = 'Hubo un problema al conectar con Regina, lo siento.';
           this.messages.push({ from: 'bot', text: errorTexto });
           this.hablarTexto(errorTexto);
         }
       });
 
-    // ------------------------------------------------
-    // 4. Respuesta normal placeholder (manteniendo todo)
-    // ------------------------------------------------
-    const respuesta = `Recibí tu mensaje: ${texto}`;
+    const respuesta = `Recibí tu mensaje: "${texto}"`;
     this.messages.push({ from: 'bot', text: respuesta });
     this.hablarTexto(respuesta);
   }
 
-  /* =========================================
-     Texto → voz (voz femenina si existe)
-     ========================================= */
-
-  private hablarTexto(texto: string): void {
-
+  private hablarTexto(texto: string, enfatizar: boolean = false): void {
     if (!('speechSynthesis' in window)) return;
 
     const synth = window.speechSynthesis;
 
     const decir = () => {
-
       const voces = synth.getVoices();
 
-      let vozSeleccionada =
-        voces.find(v =>
-          v.lang.startsWith('es') &&
-          (
-            v.name.toLowerCase().includes('female') ||
-            v.name.toLowerCase().includes('woman') ||
-            v.name.toLowerCase().includes('mujer')
-          )
-        );
+      let vozSeleccionada = voces.find(v =>
+        v.lang.startsWith('es') &&
+        (v.name.toLowerCase().includes('latino') ||
+         v.name.toLowerCase().includes('female') ||
+         v.name.toLowerCase().includes('mujer') ||
+         v.name.toLowerCase().includes('woman'))
+      );
 
       if (!vozSeleccionada) {
         vozSeleccionada = voces.find(v => v.lang.startsWith('es'));
@@ -232,8 +193,8 @@ export class DefaultLayoutComponent implements OnInit {
       const utterance = new SpeechSynthesisUtterance(texto);
       utterance.lang = 'es-PE';
       utterance.voice = vozSeleccionada || null;
-      utterance.rate = 0.95;
-      utterance.pitch = 1.15;
+      utterance.rate = enfatizar ? 1.05 : 0.95;
+      utterance.pitch = enfatizar ? 1.25 : 1.15;
 
       synth.cancel();
       synth.speak(utterance);
@@ -246,21 +207,13 @@ export class DefaultLayoutComponent implements OnInit {
     }
   }
 
-  /* =========================================
-     Utilitarios
-     ========================================= */
-
   private obtenerSaludoPorHora(): string {
-
     const ahora = new Date(
       new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
     );
-
     const hora = ahora.getHours();
-
     if (hora >= 5 && hora < 12) return 'Buenos días';
     if (hora >= 12 && hora < 18) return 'Buenas tardes';
-
     return 'Buenas noches';
   }
 
@@ -268,10 +221,6 @@ export class DefaultLayoutComponent implements OnInit {
     if (!texto) return texto;
     return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
   }
-
-  /* =========================================
-     Código original del layout
-     ========================================= */
 
   getUserRole(): string {
     const userString = sessionStorage.getItem('user');
