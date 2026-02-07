@@ -4,6 +4,16 @@ import { AppComponent } from './app/app.component';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from './environments/environment';
 import { appConfig } from './app/app.config'; // tu configuración adicional si es que tiene providers, imports, etc.
+import { enableProdMode } from '@angular/core';
+
+
+if (environment.production) {
+  enableProdMode();
+
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
 
 bootstrapApplication(AppComponent, {
   ...appConfig, // spread de tu configuración existente

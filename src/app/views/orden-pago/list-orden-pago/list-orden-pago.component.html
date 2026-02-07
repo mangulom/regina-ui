@@ -3,7 +3,7 @@
     <div class="title-f6">Lista de Órdenes de Pago</div>
   </div>
   <div class="bar-buttons-top d-flex justify-content-end w-100">
-    <button class="general-button btn-secondary">
+    <button (click)="onBack()" class="general-button btn-secondary">
       <i class="fas fa-arrow-left"></i>
       Regresar
     </button>
@@ -11,80 +11,115 @@
   <div class="table-container table-responsive">
     <table class="table global-table table-striped table-hover">
       <thead>
-        <th class="text-center" *ngFor="let column of columns">
-          {{column.label}}
-        </th>
+        <th class="text-center">Nro de Orden</th>
+        <th *ngIf="isAdminUser === 'A'" class="text-center">Auxiliar</th>
+        <th class="text-center">Fecha de Orden</th>
+        <th class="text-center">Tipo de Gasto</th>
+        <th class="text-center">Moneda</th>
+        <th class="text-center">Importe</th>
+        <th class="text-center">Estado</th>
         <th class="text-center">Acciones</th>
       </thead>
       <tbody>
-        <tr *ngFor="let reg of data">
+        <tr *ngFor="let reg of ordenes">
           <td class="text-center">{{reg.numOrden}}</td>
+          <td *ngIf="isAdminUser === 'A'" class="text-center">{{reg.cdesAuxiliar}}</td>
           <td class="text-center">{{reg.fecOrden | date: 'dd/MM/yyyy'}}</td>
-          <td class="text-center">{{reg.cDesTipoGasto}}</td>
-          <td class="text-center">{{reg.cDesMoneda}}</td>
+          <td class="text-center">{{reg.cdesTipoGasto}}</td>
+          <td class="text-center">{{reg.cdesMoneda}}</td>
           <td class="text-center">{{reg.impOrdPago}}</td>
-          <td class="text-center">{{reg.cDesTado}}</td>
+          <td class="text-center">{{reg.tipEstado}}</td>
           <td class="text-center">
-            <button type="button" title="Rendir cuenta" type="button" class="btn btn-success btn-sm me-1"><i
-                class="fa fa-plus"></i></button>
+            <button (click)="openEditOrdenPago(reg)" type="button" title="Rendir cuenta" type="button"
+              class="btn btn-success btn-sm me-1"><i class="fa fa-plus"></i></button>
             <button style="background-color: #0063A7;" title="Ver Detalle" type="button"
               class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
           </td>
         </tr>
       </tbody>
     </table>
-    <!-- PRIMARY -->
-    <button class="general-button btn-primary">
-      <i class="fas fa-save"></i>
-      Guardar
-    </button>
 
-    <!-- SUCCESS -->
-    <button class="general-button btn-success">
-      <i class="fas fa-check-circle"></i>
-      Confirmar
-    </button>
+    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+      <span class="text-muted small" style="font-family: var(--app-font-family) !important;">
+        Mostrando Página <strong>{{ currentPage + 1 }}</strong> de
+        <strong>{{ totalPages }}</strong> (Total: {{ totalItems }})
+      </span>
 
-    <!-- DANGER -->
-    <button class="general-button btn-danger">
-      <i class="fas fa-trash"></i>
-      Eliminar
-    </button>
+      <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <button class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+              <span aria-hidden="true">&laquo; Anterior</span>
+            </button>
+          </li>
 
-    <!-- WARNING -->
-    <button class="general-button btn-warning">
-      <i class="fas fa-exclamation-triangle"></i>
-      Advertencia
-    </button>
+          <li class="page-item disabled">
+            <span class="page-link border-0 text-dark fw-bold">{{
+              currentPage + 1
+              }}</span>
+          </li>
 
-    <!-- INFO -->
-    <button class="general-button btn-info">
-      <i class="fas fa-info-circle"></i>
-      Información
-    </button>
-
-    <!-- SECONDARY -->
-    <button class="general-button btn-secondary">
-      <i class="fas fa-sliders-h"></i>
-      Configurar
-    </button>
-
-    <!-- DARK -->
-    <button class="general-button btn-dark">
-      <i class="fas fa-moon"></i>
-      Modo oscuro
-    </button>
-
-    <!-- LIGHT -->
-    <button class="general-button btn-light">
-      <i class="fas fa-arrow-left"></i>
-      Regresar
-    </button>
-
-    <!-- DISABLED -->
-    <button class="general-button btn-primary" disabled>
-      <i class="fas fa-ban"></i>
-      Bloqueado
-    </button>
+          <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+            <button class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+              <span aria-hidden="true">Siguente &raquo;</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
+
+<ng-template #orderDialog>
+  <div class="modal-content-wrapper p-3">
+
+    <!-- Header -->
+    <div class="modal-header mb-2">
+      <h5 class="modal-title">Detalle de orden</h5>
+      <button class="btn-close" (click)="close()"></button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body flex-grow-1" style="padding-right: 20px !important;">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="form-label">R.U.C</label>
+          <input class="form-control" name="ruc" id="ruc" [(ngModel)]="imagen.issuerRuc" />
+        </div>
+        <div class="col-md-9">
+          <label class="form-label">Proveedor</label>
+          <input class="form-control" name="proveedor" id="proveedor" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label">Dirección</label>
+          <input class="form-control" name="direccion" id="direccion" [(ngModel)]="imagen.issuerAddress" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Fecha de Documento</label>
+          <input class="form-control" name="fechadoc" id="fechadoc" [(ngModel)]="imagen.documentDate" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Tipo de Documento</label>
+          <input class="form-control" name="tipodoc" id="tipodoc" [(ngModel)]="imagen.documentType" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Nro. Documento</label>
+          <input class="form-control" name="nrodoc" id="nrodoc" [(ngModel)]="imagen.documentNumber" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer d-flex justify-content-between mt-3">
+      <input type="file" accept="image/*" capture="environment" (change)="onSelectImage($event)">
+      <button class="general-button btn-danger" (click)="close()">
+        <i class="fas fa-times"></i> Cerrar
+      </button>
+    </div>
+
+  </div>
+</ng-template>

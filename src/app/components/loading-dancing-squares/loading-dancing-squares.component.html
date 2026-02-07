@@ -1,0 +1,16 @@
+<div class="loader-wrapper">
+  <div
+    class="grid"
+    [style.--size.px]="size"
+    [style.--gap.px]="gap"
+  >
+    <span *ngFor="let i of [].constructor(9); let idx = index"
+          class="square"
+          [style.animationDelay.ms]="idx * 90">
+    </span>
+  </div>
+
+  <div class="text">
+    Cargando...
+  </div>
+</div>

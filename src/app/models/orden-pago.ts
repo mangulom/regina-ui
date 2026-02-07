@@ -32,8 +32,7 @@ export class OrdenPago {
   impLiqSecun?: number;
 
   // Campos calculados (subselects)
-  cDesMoneda?: string;
-  cDesAuxiliar?: string;
-  cDesTipoGasto?: string;
-  cDesTado?: string;
+  cdesMoneda?: string;
+  cdesAuxiliar?: string;
+  cdesTipoGasto?: string;
 }

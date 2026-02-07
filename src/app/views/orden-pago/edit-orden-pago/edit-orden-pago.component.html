@@ -1,1 +1,91 @@
-<p>edit-orden-pago works!</p>
+<div class="loading-overlay" *ngIf="isLoading$ | async">
+    <app-loading-dancing-squares [size]="22" [gap]="8"></app-loading-dancing-squares>
+</div>
+<div class="form-container">
+    <div class="mb-2 text-end" *ngIf="imageChangedEvent">
+        <button type="button" class="general-button btn-primary btn-sm me-2" (click)="toggleImageCropper()">
+            {{ showImageCropper ? 'Ocultar imagen' : 'Mostrar imagen' }}
+        </button>
+
+
+        <button type="button" class="general-button btn-success btn-sm" (click)="runOcr()">
+            Leer texto del recorte
+        </button>
+    </div>
+
+    <!-- Imagen capturada / cropper -->
+    <div class="mb-3" *ngIf="imageChangedEvent && showImageCropper">
+
+        <div class="card">
+            <div class="card-body p-2">
+
+                <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" format="png"
+                    (imageCropped)="onImageCropped($event)">
+                </image-cropper>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Captura de imagen -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <label class="form-label fw-semibold mb-2 d-block">
+                Capturar imagen
+            </label>
+
+            <label class="general-button btn-primary btn-capture-image">
+                <i class="fa fa-camera me-2"></i>
+                Capturar imagen
+                <input type="file" accept="image/*" capture="environment" (change)="onSelectImage($event)" hidden>
+            </label>
+
+        </div>
+    </div>
+
+    <!-- Datos -->
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold mb-2 d-block">R.U.C</label>
+            <input class="form-control" name="ruc" id="ruc" [(ngModel)]="dataImagen.issuerRuc" />
+        </div>
+
+        <div class="col-md-9">
+            <label class="form-label fw-semibold mb-2 d-block">Proveedor</label>
+            <input class="form-control" name="proveedor" id="proveedor" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <label class="form-label fw-semibold mb-2 d-block">Dirección</label>
+            <input class="form-control" name="direccion" id="direccion" [(ngModel)]="dataImagen.issuerAddress" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold mb-2 d-block">Fecha de Documento</label>
+            <input class="form-control" name="fechadoc" id="fechadoc" [(ngModel)]="dataImagen.documentDate" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="fform-label fw-semibold mb-2 d-block">Tipo de Documento</label>
+            <input class="form-control" name="tipodoc" id="tipodoc" [(ngModel)]="dataImagen.documentType" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold mb-2 d-block">Nro. Documento</label>
+            <input class="form-control" name="nrodoc" id="nrodoc" [(ngModel)]="dataImagen.documentNumber" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold mb-2 d-block">Importe {{dataImagen.currency}}</label>
+            <input readonly type="text" name="importe" id="importe"
+                class="form-control text-end" [(ngModel)]="dataImagen.amount"
+                currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.', precision: 2, nullable: true }" />
+        </div>
+    </div>
+
+</div>

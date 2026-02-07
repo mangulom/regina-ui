@@ -24,7 +24,6 @@ export class AuthService {
 
   login(dto: RegSecUser): Observable<any> {
     const url = this.apiurlAuth + "/api/auth/autenticar";
-    console.log(url);
     return this.http.post(this.apiurlAuth + "/api/auth/autenticar", dto, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
@@ -57,7 +56,6 @@ export class AuthService {
 
   // Método para cerrar sesión
   logout(): void {
-    console.log("Hola");
     localStorage.removeItem('authToken');
     this.authStatusListener.next(false); // El usuario ha cerrado sesión
   }

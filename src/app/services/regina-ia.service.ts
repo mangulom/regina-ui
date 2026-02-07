@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WrapperRequestIA } from '../models/wrappers/wrapper-request-ia';
 
 // Interfaz para tipar la respuesta del servicio FastAPI
 export interface ChatResponse {
@@ -18,22 +19,9 @@ export class ReginaIaService {
 
   constructor(private http: HttpClient) { }
 
-  enviarPregunta(
-    mensaje: string,
-    codEmpresa?: string,
-    codSucursal?: string,
-    anoPeriodo?: string,
-    codPeriodo?: string,
-    codAuxiliar?: string
+  enviarPregunta(payload: WrapperRequestIA
   ): Observable<ChatResponse> {
     try {
-    const payload: any = { mensaje };
-
-    if (codEmpresa) payload.codEmpresa = codEmpresa;
-    if (codSucursal) payload.codSucursal = codSucursal;
-    if (anoPeriodo) payload.anoPeriodo = anoPeriodo;
-    if (codPeriodo) payload.codPeriodo = codPeriodo;
-    if (codAuxiliar) payload.codAuxiliar = codAuxiliar;
     return this.http.post<ChatResponse>(`${this.baseUrl}/chat`, payload);
   } catch (error) {
     console.error('Error al enviar la pregunta:', error);

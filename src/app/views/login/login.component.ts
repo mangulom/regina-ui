@@ -32,8 +32,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   showButtonPeriodo: boolean = false;
   pendingOk: boolean = false;
   dtoUser: RegSecUser = new RegSecUser();
+  selectedYear: string = "";
+  selectedMonth: string = "";
 
   constructor(private router: Router, private service: AuthService) {
+    this.selectedYear = (new Date().getFullYear()).toString();
+    this.selectedMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
+    sessionStorage.setItem('periodo_month', this.selectedMonth);
+    sessionStorage.setItem('periodo_year', this.selectedYear);
+
     if (sessionStorage.getItem('isLoggedIn') === 'true') {
       // Redirige al Dashboard si la sesión está activa
       this.router.navigate(['/dashboard']);
@@ -72,6 +79,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   onLogin() {
     if (this.valida_login()) {
       this.pendingOk = !this.pendingOk;
+      this.dtoUser.codEmpresa = '0001';
+      this.dtoUser.codSucursal = '001';
       this.service.login(this.dtoUser).subscribe(
         (response: Response) => {
           if (response.error == 0) {
@@ -81,7 +90,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             } else {
               this.dtoUser = response.resultado;
               this.authToken = this.dtoUser.authToken;
-              this.dtoUser.authToken = '';
               sessionStorage.setItem('isLoggedIn', 'true');
               sessionStorage.setItem('authToken', this.authToken);
               sessionStorage.setItem('user', JSON.stringify(response.resultado));
@@ -118,7 +126,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (response.error == 0) {
           this.dtoUser = response.resultado;
           this.authToken = this.dtoUser.authToken;
-          this.dtoUser.authToken = '';
           sessionStorage.setItem('isLoggedIn', 'true');
           sessionStorage.setItem('authToken', this.authToken);
           sessionStorage.setItem('user', JSON.stringify(response.resultado));
@@ -144,8 +151,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onIngresar() {
-
-    this.router.navigate(['/list-orders']);
+        sessionStorage.setItem('periodo_month', this.selectedMonth.toString().padStart(2, '0'));
+    sessionStorage.setItem('periodo_year', this.selectedYear.toString().padStart(4, '0'));
+    this.router.navigate(['/home']);
     this.getConfiguracionSistema();
   }
 

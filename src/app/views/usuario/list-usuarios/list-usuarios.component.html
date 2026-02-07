@@ -13,3 +13,29 @@
         </button>
     </div>
 </div>
+  <div class="table-container table-responsive">
+    <table class="table global-table table-striped table-hover">
+      <thead>
+        <th class="text-center" *ngFor="let column of columns">
+          {{column.label}}
+        </th>
+        <th class="text-center">Acciones</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of usuarios">
+          <td class="text-center">{{reg.userUsername}}</td>
+          <td class="text-center">{{reg.userLastName}}</td>
+          <td class="text-center">{{reg.userMiddleName}}</td>
+          <td class="text-center">{{reg.userName}}</td>
+          <td class="text-center">{{reg.userStatus}}</td>
+          <td class="text-center">{{reg.profileShortName}}</td>
+          <td class="text-center">
+            <button type="button" title="Rendir cuenta" type="button" class="btn btn-success btn-sm me-1"><i
+                class="fa fa-plus"></i></button>
+            <button style="background-color: #0063A7;" title="Ver Detalle" type="button"
+              class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

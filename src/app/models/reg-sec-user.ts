@@ -1,5 +1,4 @@
 export class RegSecUser {
-
     userId?: number;
     userCreatedAt?: Date;
     userEmail?: string;
@@ -14,5 +13,11 @@ export class RegSecUser {
     userUpdatedAt?: Date;
     userUsername?: string;
     userOldPassword?: string;
+    userStatus?: string;
+    codEmpresa?: string;
+    codSucursal?: string;
+    profileShortName?: string;
+    profileType?: string;
     authToken: string = '';
+    mensaje?: string;
 }

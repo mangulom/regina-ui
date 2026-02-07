@@ -1,0 +1,15 @@
+.home-container {
+  width: 85.3vw;
+  height: 100%;
+  overflow: hidden;
+background-color: white !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-image {
+  width: 80%;
+  object-fit: cover;
+  object-position: center center;
+}

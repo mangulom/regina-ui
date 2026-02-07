@@ -97,9 +97,10 @@
   width: 100%;
   border: none;
   background: transparent;
-  padding: 8px;
+  padding: 3px !important;
   cursor: pointer;
   text-align: left;
+  font-size: 0.8rem !important;
 }
 
 .dropdown-btn:hover {

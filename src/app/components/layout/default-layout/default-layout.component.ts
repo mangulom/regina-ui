@@ -9,8 +9,9 @@ import { DeviceService } from '../../../services/core-service/device.service';
 import { DefaultFooterMobileComponent } from '../../layout/default-layout/default-footer-mobile/default-footer-mobile.component';
 import { DefaultFooterComponent } from './default-footer/default-footer.component';
 
-import { ReginaIaService } from '../../../services/regina-ia.service';
+import { ChatResponse, ReginaIaService } from '../../../services/regina-ia.service';
 import { finalize } from 'rxjs/operators';
+import { WrapperRequestIA } from '../../../models/wrappers/wrapper-request-ia';
 
 interface ChatMessage {
   from: 'user' | 'bot';
@@ -39,7 +40,7 @@ export class DefaultLayoutComponent implements OnInit {
     public deviceService: DeviceService,
     private zone: NgZone,
     private reginaService: ReginaIaService
-  ) {}
+  ) { }
 
   user = sessionStorage.getItem('user')
     ? JSON.parse(sessionStorage.getItem('user')!)
@@ -52,10 +53,17 @@ export class DefaultLayoutComponent implements OnInit {
   userInput = '';
   messages: ChatMessage[] = [];
 
-  private recognition: any;
+  recognition: any;
 
-  private saludoInicialMostrado = false;
-  private nombreUsuario = '';
+  saludoInicialMostrado = false;
+  nombreUsuario = '';
+  wrapperRequestIA: WrapperRequestIA = new WrapperRequestIA();
+
+  retorno: any;
+
+  showReginaIcon: boolean = true;
+
+  isListening = false;
 
   ngOnInit(): void {
 
@@ -65,6 +73,13 @@ export class DefaultLayoutComponent implements OnInit {
     if (userStr) {
       try {
         const userObj = JSON.parse(userStr);
+        this.wrapperRequestIA.userUserName = userObj.userUserName || '';
+        this.wrapperRequestIA.codEmpresa = userObj.codEmpresa || '';
+        this.wrapperRequestIA.codSucursal = userObj.codSucursal || '';
+        this.wrapperRequestIA.anoPeriodo = sessionStorage.getItem('periodo_year') || '';
+        this.wrapperRequestIA.codPeriodo = sessionStorage.getItem('periodo_month') || '';
+        this.wrapperRequestIA.codAuxiliar = userObj.codAuxiliar || '';
+        this.wrapperRequestIA.authToken = userObj.authToken || '';
         this.nombreUsuario = userObj.userName || '';
       } catch {
         this.nombreUsuario = '';
@@ -76,14 +91,59 @@ export class DefaultLayoutComponent implements OnInit {
       (window as any).webkitSpeechRecognition;
 
     if (SpeechRecognition) {
+
       this.recognition = new SpeechRecognition();
       this.recognition.lang = 'es-PE';
       this.recognition.continuous = false;
       this.recognition.interimResults = false;
+
+      this.recognition.onend = () => {
+        this.zone.run(() => {
+          this.isListening = false;
+        });
+      };
+
+      this.recognition.onerror = () => {
+        this.zone.run(() => {
+          this.isListening = false;
+        });
+      };
+
     }
   }
 
+  toggleMic(): void {
+
+    if (this.isListening) {
+      this.cancelarEscucha();
+    } else {
+      this.iniciarEscucha();
+    }
+
+  }
+
+  iniciarEscucha(): void {
+
+    if (!this.recognition) {
+      return;
+    }
+
+    this.isListening = true;
+
+    this.hablar();
+  }
+
+  cancelarEscucha(): void {
+
+    if (this.recognition) {
+      this.recognition.abort();
+    }
+
+    this.isListening = false;
+  }
+
   toggleReginaChat(): void {
+    this.showReginaIcon = !this.showReginaIcon;
     this.showReginaChat = !this.showReginaChat;
   }
 
@@ -102,20 +162,29 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   hablar(): void {
+
     if (!this.recognition) {
       alert('El reconocimiento de voz no está soportado en este navegador.');
+      this.isListening = false;
       return;
     }
 
     this.recognition.onresult = (event: any) => {
+
       const texto = event.results[0][0].transcript;
+
       this.zone.run(() => {
         this.userInput = texto;
         this.enviarTexto();
       });
     };
 
-    this.recognition.start();
+    try {
+      this.recognition.start();
+    } catch (e) {
+      // evita error si se intenta iniciar dos veces
+    }
+
   }
 
   private procesarPregunta(texto: string): void {
@@ -129,61 +198,80 @@ export class DefaultLayoutComponent implements OnInit {
       .test(textoNormalizado);
 
     if (esSaludo) {
+
       const saludoHora = this.obtenerSaludoPorHora();
+
       const respuestaSaludo = nombre
-        ? `${saludoHora} ${nombre}! Qué gusto verte, ¿en qué puedo ayudarte hoy?`
-        : `${saludoHora}! Qué gusto verte, ¿en qué puedo ayudarte hoy?`;
+        ? `${saludoHora} ${nombre}, ¿en qué puedo ayudarte hoy?`
+        : `${saludoHora}, ¿en qué puedo ayudarte hoy?`;
+
       this.messages.push({ from: 'bot', text: respuestaSaludo });
       this.hablarTexto(respuestaSaludo, true);
       this.saludoInicialMostrado = true;
-      return;
+
+    } else {
+
+      this.wrapperRequestIA.mensaje = texto;
+      this.wrapperRequestIA.userUserName = 'mangulom';
+      this.wrapperRequestIA.anoPeriodo = sessionStorage.getItem('periodo_year') || '';
+      this.wrapperRequestIA.codPeriodo = sessionStorage.getItem('periodo_month') || '';
+      this.wrapperRequestIA.codAuxiliar = this.user?.codAuxiliar || '';
+
+      this.reginaService.enviarPregunta(this.wrapperRequestIA)
+        .pipe(finalize(() => { }))
+        .subscribe({
+          next: (res: ChatResponse) => {
+
+            this.retorno = (res as any)['data'] || [];
+
+            switch (res.tipo) {
+              case 'ordenes':
+                this.router.navigate(
+                  ['/list-orders'],
+                  { state: { data: this.retorno } }
+                );
+                break;
+
+              case 'usuarios':
+                this.router.navigate(
+                  ['/list-usuarios'],
+                  { state: { data: this.retorno } }
+                );
+                break;
+            }
+
+            const respuesta = res.respuesta || 'No entendí eso, ¿podrías repetirlo?';
+
+            this.messages.push({ from: 'bot', text: respuesta });
+            this.hablarTexto(respuesta);
+          },
+          error: (err) => {
+            console.error(err);
+            const errorTexto = 'Hubo un problema al conectar con Regina, lo siento.';
+            this.messages.push({ from: 'bot', text: errorTexto });
+            this.hablarTexto(errorTexto);
+          }
+        });
+
     }
-
-    if (!this.saludoInicialMostrado) {
-      this.saludoInicialMostrado = true;
-      const saludoHora = this.obtenerSaludoPorHora();
-      const saludoInicial = nombre
-        ? `${saludoHora} ${nombre}! Soy Regina y estoy feliz de ayudarte. ¿Qué necesitas hoy?`
-        : `${saludoHora}! Soy Regina y estoy feliz de ayudarte. ¿Qué necesitas hoy?`;
-      this.messages.push({ from: 'bot', text: saludoInicial });
-      this.hablarTexto(saludoInicial, true);
-    }
-
-    this.reginaService.enviarPregunta(texto)
-      .pipe(finalize(() => {}))
-      .subscribe({
-        next: (res: any) => {
-          const respuesta = res.respuesta || 'No entendí eso, ¿podrías repetirlo?';
-          this.messages.push({ from: 'bot', text: respuesta });
-          this.hablarTexto(respuesta);
-        },
-        error: (err) => {
-          console.error(err);
-          const errorTexto = 'Hubo un problema al conectar con Regina, lo siento.';
-          this.messages.push({ from: 'bot', text: errorTexto });
-          this.hablarTexto(errorTexto);
-        }
-      });
-
-    const respuesta = `Recibí tu mensaje: "${texto}"`;
-    this.messages.push({ from: 'bot', text: respuesta });
-    this.hablarTexto(respuesta);
   }
 
   private hablarTexto(texto: string, enfatizar: boolean = false): void {
+
     if (!('speechSynthesis' in window)) return;
 
     const synth = window.speechSynthesis;
 
     const decir = () => {
+
       const voces = synth.getVoices();
 
       let vozSeleccionada = voces.find(v =>
         v.lang.startsWith('es') &&
         (v.name.toLowerCase().includes('latino') ||
-         v.name.toLowerCase().includes('female') ||
-         v.name.toLowerCase().includes('mujer') ||
-         v.name.toLowerCase().includes('woman'))
+          v.name.toLowerCase().includes('female') ||
+          v.name.toLowerCase().includes('mujer') ||
+          v.name.toLowerCase().includes('woman'))
       );
 
       if (!vozSeleccionada) {
@@ -208,10 +296,13 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   private obtenerSaludoPorHora(): string {
+
     const ahora = new Date(
       new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
     );
+
     const hora = ahora.getHours();
+
     if (hora >= 5 && hora < 12) return 'Buenos días';
     if (hora >= 12 && hora < 18) return 'Buenas tardes';
     return 'Buenas noches';
@@ -223,22 +314,29 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   getUserRole(): string {
+
     const userString = sessionStorage.getItem('user');
+
     if (userString) {
       try {
+
         const user = JSON.parse(userString);
+
         const permiso = user.permisos.find(
           (p: any) =>
             p.codMenu === 14 &&
             p.codItem === 1 &&
             p.idProfile === user.idProfile
         );
+
         return permiso ? 'ADMIN' : 'USER';
+
       } catch (e) {
         console.error('Error al parsear User desde sessionStorage', e);
         return 'USER';
       }
     }
+
     return 'USER';
   }
 
@@ -254,4 +352,5 @@ export class DefaultLayoutComponent implements OnInit {
       console.log('No hay componente activo');
     }
   }
+
 }

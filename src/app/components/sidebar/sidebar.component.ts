@@ -31,48 +31,20 @@ export class SidebarComponent implements OnInit {
       this.authService.obtenerItemsMenu(this.userId, this.codEmpresa).subscribe(
         (response: any)=>{
           this.items = response;
-          console.log("Items ", this.items);
         }
 
       )
-    
-    
   }
 
-  /*   items: NavItem[] = [
-      {
-        label: 'Procesos',
-        icon: 'fas fa-cog',
-        expanded: false,
-        subitems: [
-          { label: 'Órdenes de Pago', icon: 'fa-solid fa-list', route: '/list-orders' },
-          { label: 'Solicitudes', icon: 'fas fa-user-shield', route: '' }
-        ]
-      },
-      {
-        label: 'Seguridad',
-        icon: 'fas fa-shield',
-        expanded: false,
-        subitems: [
-          { label: 'Usuarios', icon: 'fa-solid fa-list', route: '/' },
-          { label: 'Perfiles', icon: 'fa-regular fa-address-card', route: '/' },
-          { label: 'Permisos', icon: 'fas fa-lock', route: '/' }
-        ]
-      },
-      {
-        label: 'Configuración',
-        icon: 'fas fa-wrench',
-        route: '/settings'
-      }
-    ]; */
+  home(): void {
+    this.router.navigate(['/home']);
+  }
 
   toggle(item: NavItem): void {
-    // Navega si tiene ruta
     if (item.route) {
       this.router.navigate([item.route]);
     }
 
-    // Expande / colapsa si tiene subitems
     if (item.subitems?.length) {
       this.items.forEach(i => {
         if (i === item) {

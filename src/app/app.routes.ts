@@ -10,12 +10,10 @@ import { ListUsuariosComponent } from './views/usuario/list-usuarios/list-usuari
 import { EditUsuarioComponent } from './views/usuario/edit-usuario/edit-usuario.component';
 import { ListPerfilesComponent } from './views/perfil/list-perfiles/list-perfiles.component';
 import { EditPerfilComponent } from './views/perfil/edit-perfil/edit-perfil.component';
+import { HomeComponent } from './views/home/home.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: LoginComponent
-  },
+
   {
     path: 'login',
     component: LoginComponent
@@ -26,6 +24,14 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent,
     children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'home',
+        component: HomeComponent
+      },
       {
         path: 'list-orders',
         component: ListOrdenPagoComponent

@@ -53,7 +53,6 @@ handleClick(route?: string) {
   this.openIndex = null;
 
   if (route) {
-    console.log('Navegando a:', route);
     this.router.navigate([route]);
   }
 }

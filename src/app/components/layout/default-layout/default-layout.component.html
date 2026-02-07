@@ -9,19 +9,28 @@
   </header>
 
   <main class="content">
-    <router-outlet></router-outlet>
+    <div class="content-inner">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 
   <!-- Botón flotante Regina -->
-  <div class="regina-chat-slot" (click)="toggleReginaChat()">
-    <span>Regina</span>
+  <div
+    *ngIf="showReginaIcon"
+    class="regina-chat-slot"
+    (click)="toggleReginaChat()">
+
+    <img
+      src="assets/images/icono-chatbot.png"
+      alt="Regina"
+      class="regina-chat-icon" />
   </div>
 
   <!-- Panel de chat -->
   <div class="regina-chat-panel" *ngIf="showReginaChat">
 
     <div class="regina-chat-header">
-      <span>Regina</span>
+      <span>Charla con Regina</span>
       <button type="button" (click)="toggleReginaChat()">✕</button>
     </div>
 
@@ -41,13 +50,34 @@
 
       <div class="regina-input">
 
-        <input
-          type="text"
-          [(ngModel)]="userInput"
-          placeholder="Escribe a Regina..." />
+        <div class="voice-input-wrapper">
 
-        <button type="button" class="mic" (click)="hablar()">🎤</button>
-        <button type="button" class="send" (click)="enviarTexto()">➤</button>
+          <input
+            type="text"
+            [(ngModel)]="userInput"
+            placeholder="Escribe a Regina..."
+            [disabled]="isListening" />
+
+          <div class="voice-wave" *ngIf="isListening"></div>
+
+        </div>
+
+        <button
+          type="button"
+          class="mic"
+          (click)="toggleMic()">
+
+          <i
+            class="fa"
+            [ngClass]="isListening ? 'fa-microphone-slash' : 'fa-microphone'">
+          </i>
+
+        </button>
+
+        <button
+          type="button"
+          class="send"
+          (click)="enviarTexto()">➤</button>
 
       </div>
 

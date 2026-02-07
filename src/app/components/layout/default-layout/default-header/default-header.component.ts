@@ -41,6 +41,9 @@ export class DefaultHeaderComponent implements OnInit {
   periodo: string = '';
   muestraBotonToogle: boolean = false;
   dtoUser: RegSecUser = new RegSecUser();
+  years: number[] = [];
+  selectedMonth: number;
+  selectedYear: number;
 
   private subscription: Subscription = new Subscription();
 
@@ -51,7 +54,10 @@ export class DefaultHeaderComponent implements OnInit {
   ];
 
   constructor(private router: Router, public deviceService: DeviceService) {
-
+        const currentYear = new Date().getFullYear();
+    this.years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+    this.selectedYear = currentYear;
+    this.selectedMonth = new Date().getMonth() + 1;
   }
   ngOnInit(): void {
     this.muestraBotonToogle = this.deviceService.isDesktopDevice();
@@ -62,8 +68,6 @@ export class DefaultHeaderComponent implements OnInit {
     //RECUPERA DATOS DEL SESSION STORAGE
     const userString = sessionStorage.getItem("user");
     this.dtoUser = userString ? JSON.parse(userString) : new RegSecUser();
-    console.log("Dto ", this.dtoUser.userEmail);
-  
   }
 
   toggleDropdown() {
@@ -181,4 +185,8 @@ export class DefaultHeaderComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  cambiaPeriodo() {
+    sessionStorage.setItem('periodo_month', this.selectedMonth.toString().padStart(2, '0'));
+    sessionStorage.setItem('periodo_year', this.selectedYear.toString().padStart(4, '0'));
+  }
 }

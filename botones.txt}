@@ -1,0 +1,53 @@
+    <!-- PRIMARY -->
+    <button class="general-button btn-primary">
+      <i class="fas fa-save"></i>
+      Guardar
+    </button>
+
+    <!-- SUCCESS -->
+    <button class="general-button btn-success">
+      <i class="fas fa-check-circle"></i>
+      Confirmar
+    </button>
+
+    <!-- DANGER -->
+    <button class="general-button btn-danger">
+      <i class="fas fa-trash"></i>
+      Eliminar
+    </button>
+
+    <!-- WARNING -->
+    <button class="general-button btn-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      Advertencia
+    </button>
+
+    <!-- INFO -->
+    <button class="general-button btn-info">
+      <i class="fas fa-info-circle"></i>
+      Información
+    </button>
+
+    <!-- SECONDARY -->
+    <button class="general-button btn-secondary">
+      <i class="fas fa-sliders-h"></i>
+      Configurar
+    </button>
+
+    <!-- DARK -->
+    <button class="general-button btn-dark">
+      <i class="fas fa-moon"></i>
+      Modo oscuro
+    </button>
+
+    <!-- LIGHT -->
+    <button class="general-button btn-light">
+      <i class="fas fa-arrow-left"></i>
+      Regresar
+    </button>
+
+    <!-- DISABLED -->
+    <button class="general-button btn-primary" disabled>
+      <i class="fas fa-ban"></i>
+      Bloqueado
+    </button>
