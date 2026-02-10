@@ -24,6 +24,7 @@ export class Imagen {
   documentType?: string;
   documentNumber?: string;
   issuerRuc?: string;
+  issuerName?: string;
   issuerAddress?: string;
   documentDate?: string;
 }
@@ -181,6 +182,7 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
         this.imagen.documentType = response.detectedData.documentType;
         this.imagen.documentNumber = response.detectedData.documentNumber;
         this.imagen.issuerRuc = response.detectedData.issuerRuc;
+        this.imagen.issuerName = response.detectedData.issuerName;
         this.imagen.issuerAddress = response.detectedData.issuerAddress;
         this.imagen.documentDate = response.detectedData.documentDate;
       }

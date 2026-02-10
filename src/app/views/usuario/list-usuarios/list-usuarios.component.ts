@@ -20,20 +20,9 @@ constructor(private regSecUserService: RegSecUserService, private location: Loca
   usuarios: RegSecUser[] = [];
   wrapperRequestUsuario: WrapperRequestUsuario = new WrapperRequestUsuario();
 
-  // Columnas de la tabla
-  columns = [
-    { key: 'userName', label: 'Nombre de Usuario', color: 'PRIMARY' },
-    { key: 'userLastName', label: 'Apellido', color: 'SUCCESS' },
-    { key: 'userMiddleName', label: 'Segundo Nombre', color: 'DANGER' },
-    { key: 'userStatus', label: 'Estado', color: 'DANGER' },
-    { key: 'profileShortName', label: 'Perfil', color: 'DANGER' },
-    { key: 'profileType', label: 'Tipo de Perfil', color: 'DANGER' },
-  ];
-
   ngOnInit(): void {
     const userString = sessionStorage.getItem('user');
     const state = history.state;
-    console.log("State ",state);
 
     if (userString) {
       try {

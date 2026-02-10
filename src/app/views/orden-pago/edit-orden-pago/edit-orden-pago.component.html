@@ -2,58 +2,59 @@
     <app-loading-dancing-squares [size]="22" [gap]="8"></app-loading-dancing-squares>
 </div>
 <div class="form-container">
-    <div class="mb-2 text-end" *ngIf="imageChangedEvent">
-        <button type="button" class="general-button btn-primary btn-sm me-2" (click)="toggleImageCropper()">
-            {{ showImageCropper ? 'Ocultar imagen' : 'Mostrar imagen' }}
-        </button>
-
-
-        <button type="button" class="general-button btn-success btn-sm" (click)="runOcr()">
-            Leer texto del recorte
-        </button>
+    <div class="button-row">
+        <!-- Captura de imagen -->
+        <label class="general-button btn-primary btn-capture-image">
+            <i class="fa fa-camera me-2"></i>
+            Capturar/Subir
+            <input type="file" accept="image/*" capture="environment" (change)="onSelectImage($event)" hidden>
+        </label>
+        <div class="right-buttons" *ngIf="imageChangedEvent">
+            <button *ngIf='showImageCropper' type="button" class="general-button btn-primary btn-sm me-1"
+                (click)="toggleImageCropper()">
+                <i class="fa-solid fa-eye-slash"></i> Ocultar
+            </button>
+            <button *ngIf='!showImageCropper' type="button" class="general-button btn-primary btn-sm me-1"
+                (click)="toggleImageCropper()">
+                <i class="fa-solid fa-image"></i> Mostrar
+            </button>
+            <button type="button" class="general-button btn-success btn-sm me-1" (click)="runOcr()">
+                <i class="fas fa-book-open-reader"></i> Leer texto
+            </button>
+            <button [disabled]="!validate" type="button" class="general-button btn-primary btn-sm me-1">
+                <i class="fas fa-save"></i> Guardar
+            </button>
+            <button (click)="onClose()" type="button" class="general-button btn-danger btn-sm">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
+        </div>
     </div>
 
     <!-- Imagen capturada / cropper -->
-    <div class="mb-3" *ngIf="imageChangedEvent && showImageCropper">
-
+    <div class="mb-1" *ngIf="imageChangedEvent && showImageCropper">
         <div class="card">
-            <div class="card-body p-2">
-
+            <div class="card-body p-1">
                 <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" format="png"
                     (imageCropped)="onImageCropped($event)">
                 </image-cropper>
-
             </div>
         </div>
     </div>
 
-    <!-- Captura de imagen -->
-    <div class="row">
-        <div class="col-md-12">
-
-            <label class="form-label fw-semibold mb-2 d-block">
-                Capturar imagen
-            </label>
-
-            <label class="general-button btn-primary btn-capture-image">
-                <i class="fa fa-camera me-2"></i>
-                Capturar imagen
-                <input type="file" accept="image/*" capture="environment" (change)="onSelectImage($event)" hidden>
-            </label>
-
-        </div>
-    </div>
-
     <!-- Datos -->
-    <div class="row mt-3">
+    <div class="row mt-1">
         <div class="col-md-3">
             <label class="form-label fw-semibold mb-2 d-block">R.U.C</label>
-            <input class="form-control" name="ruc" id="ruc" [(ngModel)]="dataImagen.issuerRuc" />
+            <input maxlength="11" (input)="ruccompleto()" class="form-control" name="ruc" id="ruc" [(ngModel)]="ruc" />
         </div>
-
         <div class="col-md-9">
             <label class="form-label fw-semibold mb-2 d-block">Proveedor</label>
-            <input class="form-control" name="proveedor" id="proveedor" />
+            <input class="form-control" name="proveedor" id="proveedor" [(ngModel)]="dataImagen.issuerName" />
+        </div>
+    </div>
+    <div class="row">
+        <div *ngIf="mensaje" class="col-md-12">
+            <span class="mensaje-alerta">{{mensaje}}</span>
         </div>
     </div>
 
@@ -80,12 +81,22 @@
             <input class="form-control" name="nrodoc" id="nrodoc" [(ngModel)]="dataImagen.documentNumber" />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-1">
+            <label class="form-label fw-semibold mb-2 d-block">Moneda</label>
+            <input class="form-control" name="moneda" id="moneda" [(ngModel)]="dataImagen.documentCurrency" />
+        </div>
+
+        <div class="col-md-2">
             <label class="form-label fw-semibold mb-2 d-block">Importe {{dataImagen.currency}}</label>
-            <input readonly type="text" name="importe" id="importe"
-                class="form-control text-end" [(ngModel)]="dataImagen.amount"
-                currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.', precision: 2, nullable: true }" />
+            <input readonly type="text" name="importe" id="importe" class="form-control text-end"
+                [(ngModel)]="dataImagen.amount" currencyMask
+                [options]="{ prefix: '', thousands: ',', decimal: '.', precision: 2, nullable: true }" />
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-label fw-semibold mb-2 d-block">Detalle</label>
+                <textarea class="form-control" rows="2" [(ngModel)]="detalle"></textarea>
+            </div>
         </div>
     </div>
-
 </div>
