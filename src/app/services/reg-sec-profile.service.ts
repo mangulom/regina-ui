@@ -1,26 +1,28 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { WrapperRequestOrdenPago } from '../models/wrappers/wrapper-request-orden-pago';
 import { Response } from '../models/response';
+import { environment } from '../../environments/environment';
+import { WrapperRequestUsuario } from '../models/wrappers/wrapper-request-usuario';
+
 @Injectable({
   providedIn: 'root'
 })
-export class OrdenPagoService {
+export class RegSecProfileService {
 
   constructor(private http: HttpClient) { }
 
-  token = sessionStorage.getItem('authToken');
-  private apiUrlProcess: string = environment.apiUrlProcess;
 
-  getOrdenesPago(wrapper: WrapperRequestOrdenPago): Observable<Response> {
-    
+  token = sessionStorage.getItem('authToken');
+  apiUrlProcess: string = environment.apiUrlProcess;
+  apiUrlAuth: string = environment.apiUrlAuth;
+
+  getRegSecProfiles(): Observable<Response> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.get<Response>(`${this.apiUrlProcess}orden-pago/listar/${wrapper.codEmpresa}/${wrapper.codSucursal}/${wrapper.codAuxiliar}/${wrapper.isAdmin ? "A" : "U"}`, {
+    return this.http.get<Response>(`${this.apiUrlAuth}/api/profile/listar`, {
       headers,
       responseType: 'json'
     });

@@ -5,6 +5,8 @@ import { RegSecUser } from '../../../models/reg-sec-user';
 import { RegSecUserService } from '../../../services/reg-sec-user.service';
 import { WrapperRequestUsuario } from '../../../models/wrappers/wrapper-request-usuario';
 import { Response } from '../../../models/response';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-usuarios',
@@ -13,7 +15,10 @@ import { Response } from '../../../models/response';
   styleUrl: './list-usuarios.component.scss'
 })
 export class ListUsuariosComponent {
-constructor(private regSecUserService: RegSecUserService, private location: Location) { }
+  constructor(private regSecUserService: RegSecUserService, private location: Location,
+    private router: Router,
+    private dialog: MatDialog
+  ) { }
 
   @ViewChild('myTable', { static: true }) tableRef!: ElementRef;
 
@@ -50,5 +55,9 @@ constructor(private regSecUserService: RegSecUserService, private location: Loca
 
   onBack() {
     this.location.back();
+  }
+
+  onNewUsuario() {
+    this.router.navigate(['/edit-usuario']);
   }
 }

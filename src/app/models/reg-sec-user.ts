@@ -16,8 +16,11 @@ export class RegSecUser {
     userStatus?: string;
     codEmpresa?: string;
     codSucursal?: string;
+    profileId?: number;
     profileShortName?: string;
     profileType?: string;
     authToken: string = '';
     mensaje?: string;
+    codAuxiliar?: string;
+    userAdmin?: boolean;
 }

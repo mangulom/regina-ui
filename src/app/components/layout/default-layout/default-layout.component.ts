@@ -216,7 +216,7 @@ export class DefaultLayoutComponent implements OnInit {
       this.wrapperRequestIA.anoPeriodo = sessionStorage.getItem('periodo_year') || '';
       this.wrapperRequestIA.codPeriodo = sessionStorage.getItem('periodo_month') || '';
       this.wrapperRequestIA.codAuxiliar = this.user?.codAuxiliar || '';
-
+      this.wrapperRequestIA.isAdmin = this.user?.userAdmin ? 'A' : 'U';
       this.reginaService.enviarPregunta(this.wrapperRequestIA)
         .pipe(finalize(() => { }))
         .subscribe({

@@ -10,13 +10,15 @@ import {
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { OrdenPago } from '../../../models/orden-pago';
 import { OrdenPagoService } from '../../../services/orden-pago.service';
 import { WrapperRequestOrdenPago } from '../../../models/wrappers/wrapper-request-orden-pago';
 import { Response } from '../../../models/response';
 import { OcrService } from '../../../services/ocr.service';
+import { LoadingService } from '../../../services/loading.service';
+import { LoadingDancingSquaresComponent } from '../../../components/loading-dancing-squares/loading-dancing-squares.component';
 
 
 export class Imagen {
@@ -36,7 +38,8 @@ export class Imagen {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    LoadingDancingSquaresComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -45,25 +48,30 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
   @ViewChild('myTable') tableRef!: ElementRef;
   @ViewChild('orderDialog') orderDialog!: TemplateRef<any>;
   dialogRef!: MatDialogRef<any>;
-  
+
   constructor(
     private ordenPagoService: OrdenPagoService,
     private location: Location,
     private router: Router,
     private dialog: MatDialog,
-    private ocrService: OcrService) { }
+    private ocrService: OcrService,
+    private loadingService: LoadingService) { 
+      this.isLoading$ = this.loadingService.loading$;
+    }
 
-  ordenes: OrdenPago[] = [];
+
   wrapperRequestOrdenPago: WrapperRequestOrdenPago = new WrapperRequestOrdenPago();
-  isAdminUser = '';
+  isAdminUser: boolean = false;
+  isLoading$: Observable<boolean>;
+  ordenes: OrdenPago[] = [];      // lista completa (la que ya cargas)
+  ordenesGeneral: OrdenPago[] = [];
+  pagedOrdenes: OrdenPago[] = [];  // lista que se muestra
+  filtrarOrden: string = '';
 
-  totalItems = 0;
+  pageSize = 6;
   currentPage = 0;
-  pageSize = 10;
+  totalItems = 0;
   totalPages = 0;
-
-  @ViewChild('orderModal')
-  orderModal!: TemplateRef<any>;
 
   private navigationSub!: Subscription;
 
@@ -95,10 +103,11 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
     try {
 
       const user = JSON.parse(userString);
-      this.isAdminUser = user.profileType || '';
+      this.isAdminUser = user.userAdmin || false;
       this.wrapperRequestOrdenPago.codAuxiliar = user.codAuxiliar || '';
       this.wrapperRequestOrdenPago.codEmpresa = user.codEmpresa || '';
       this.wrapperRequestOrdenPago.codSucursal = user.codSucursal || '';
+      this.wrapperRequestOrdenPago.isAdmin = this.isAdminUser || false;
 
     } catch (e) {
       console.error('Error al parsear User desde sessionStorage', e);
@@ -112,36 +121,50 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
     if (state && state.data && state.data.resultado) {
 
       this.ordenes = state.data.resultado;
-      this.calculateTotalPages();
+      this.currentPage = 0;
+      this.buildPagination();
 
     } else {
 
       this.getOrdenesPago();
-      this.calculateTotalPages();
+      this.currentPage = 0;
+      this.buildPagination();
 
     }
   }
 
-  changePage(newPage: number): void {
-    if (newPage >= 0 && newPage < this.totalPages) {
-      this.currentPage = newPage;
-    }
+  private buildPagination(): void {
+
+    this.totalItems = this.ordenes.length;
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.pagedOrdenes = this.ordenes.slice(start, end);
+    this.loadingService.hide();
   }
 
-  calculateTotalPages(): void {
-    this.totalPages = Math.ceil(this.totalItems / this.pageSize) || 1;
+  changePage(page: number): void {
+
+    if (page < 0 || page >= this.totalPages) {
+      return;
+    }
+
+    this.currentPage = page;
+    this.buildPagination();
   }
 
   getOrdenesPago(): void {
-
+    this.loadingService.show();
     this.ordenPagoService
       .getOrdenesPago(this.wrapperRequestOrdenPago)
       .subscribe((response: Response) => {
-
         this.ordenes = response.resultado || [];
+        this.ordenesGeneral = response.resultado;
         this.totalItems = this.ordenes.length;   // ← faltaba
-        this.calculateTotalPages();
-
+        this.currentPage = 0;
+        this.buildPagination();
       });
   }
 
@@ -192,5 +215,26 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
   openEditOrdenPago(orden: OrdenPago) {
     console.log("Orden de Pago a editar:", orden);
     this.router.navigate(['/edit-order'], { state: { data: orden } });
-  } 
+  }
+
+  filtrarOrdenPago() {
+    const term = this.filtrarOrden.toLowerCase();
+    if (term) {
+      this.ordenes = this.ordenesGeneral.filter(orden => {
+        return (
+          (orden.codAuxiliar && orden.codAuxiliar.toLowerCase().includes(term)) ||
+          (orden.cdesAuxiliar && orden.cdesAuxiliar.toLowerCase().includes(term)) ||
+          (orden.numOrden && orden.numOrden.toLowerCase().includes(term)) ||
+          (orden.anoPeriodo && orden.anoPeriodo.toLowerCase().includes(term)) ||
+          (orden.fecOrden?.toString() && orden.fecOrden.toString().toLowerCase().includes(term)) ||
+          (orden.impOrdPago?.toString() && orden.impOrdPago.toString().toLowerCase().includes(term))
+        );
+      });
+      this.buildPagination();
+    } else {
+      // Si no hay término de búsqueda, restablecer la lista a la lista original
+      this.ordenes = this.ordenesGeneral;
+      this.buildPagination();
+    }
+  }
 }

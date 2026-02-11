@@ -1,8 +1,16 @@
+<div class="loading-overlay" *ngIf="isLoading$ | async">
+  <app-loading-dancing-squares [size]="22" [gap]="8"></app-loading-dancing-squares>
+</div>
 <div class="container mt-2">
   <div class="bar-buttons-top">
     <div class="title-f6">Lista de Órdenes de Pago</div>
   </div>
-  <div class="bar-buttons-top d-flex justify-content-end w-100">
+  <div class="bar-buttons-top d-flex w-100">
+    <div class="input-group justify-content-start w-50">
+      <span class="input-group-text"><i class="fa fa-search me-2"></i></span>
+      <input (input)="filtrarOrdenPago()" type="text" class="form-control" placeholder="Filtrar Órdenes..."
+        [(ngModel)]="filtrarOrden" />
+    </div>
     <button (click)="onBack()" class="general-button btn-secondary">
       <i class="fas fa-arrow-left"></i>
       Regresar
@@ -12,7 +20,7 @@
     <table class="table global-table table-striped table-hover">
       <thead>
         <th class="text-center">Nro de Orden</th>
-        <th *ngIf="isAdminUser === 'A'" class="text-center">Auxiliar</th>
+        <th *ngIf="isAdminUser" class="text-center">Auxiliar</th>
         <th class="text-center">Fecha de Orden</th>
         <th class="text-center">Tipo de Gasto</th>
         <th class="text-center">Moneda</th>
@@ -21,13 +29,13 @@
         <th class="text-center">Acciones</th>
       </thead>
       <tbody>
-        <tr *ngFor="let reg of ordenes">
+        <tr *ngFor="let reg of pagedOrdenes">
           <td class="text-center">{{reg.numOrden}}</td>
-          <td *ngIf="isAdminUser === 'A'" class="text-center">{{reg.cdesAuxiliar}}</td>
-          <td class="text-center">{{reg.fecOrden | date: 'dd/MM/yyyy'}}</td>
-          <td class="text-center">{{reg.cdesTipoGasto}}</td>
+          <td *ngIf="isAdminUser" class="text-start">{{reg.cdesAuxiliar}}</td>
+          <td class="text-center">{{reg.fecOrden | date: 'yyyy-MM-dd'}}</td>
+          <td class="text-start">{{reg.cdesTipoGasto}}</td>
           <td class="text-center">{{reg.cdesMoneda}}</td>
-          <td class="text-center">{{reg.impOrdPago}}</td>
+          <td class="text-end">{{reg.impOrdPago | number: '1.2-2'}}</td>
           <td class="text-center">{{reg.tipEstado}}</td>
           <td class="text-center">
             <button (click)="openEditOrdenPago(reg)" type="button" title="Rendir cuenta" type="button"
@@ -69,57 +77,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #orderDialog>
-  <div class="modal-content-wrapper p-3">
-
-    <!-- Header -->
-    <div class="modal-header mb-2">
-      <h5 class="modal-title">Detalle de orden</h5>
-      <button class="btn-close" (click)="close()"></button>
-    </div>
-
-    <!-- Body -->
-    <div class="modal-body flex-grow-1" style="padding-right: 20px !important;">
-      <div class="row">
-        <div class="col-md-3">
-          <label class="form-label">R.U.C</label>
-          <input class="form-control" name="ruc" id="ruc" [(ngModel)]="imagen.issuerRuc" />
-        </div>
-        <div class="col-md-9">
-          <label class="form-label">Proveedor</label>
-          <input class="form-control" name="proveedor" id="proveedor" [(ngModel)]="imagen.issuerName"/>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <label class="form-label">Dirección</label>
-          <input class="form-control" name="direccion" id="direccion" [(ngModel)]="imagen.issuerAddress" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label class="form-label">Fecha de Documento</label>
-          <input class="form-control" name="fechadoc" id="fechadoc" [(ngModel)]="imagen.documentDate" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Tipo de Documento</label>
-          <input class="form-control" name="tipodoc" id="tipodoc" [(ngModel)]="imagen.documentType" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Nro. Documento</label>
-          <input class="form-control" name="nrodoc" id="nrodoc" [(ngModel)]="imagen.documentNumber" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="modal-footer d-flex justify-content-between mt-3">
-      <input type="file" accept="image/*" capture="environment" (change)="onSelectImage($event)">
-      <button class="general-button btn-danger" (click)="close()">
-        <i class="fas fa-times"></i> Cerrar
-      </button>
-    </div>
-
-  </div>
-</ng-template>

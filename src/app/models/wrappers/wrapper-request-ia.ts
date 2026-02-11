@@ -7,4 +7,5 @@ export class WrapperRequestIA {
     codPeriodo?: string;
     codAuxiliar?: string;
     authToken?: string;
+    isAdmin?: string;
 }
