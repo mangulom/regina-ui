@@ -80,7 +80,7 @@
   height: 78px;
 
   border-radius: 50%;
-  background: #0063A7;
+  background: var(--primary-color) !important;
 
   display: flex;
   align-items: center;
@@ -134,7 +134,7 @@
 
 .regina-chat-header {
   height: 44px;
-  background: #0063A7;
+  background: var(--primary-color) !important;
   color: #ffffff;
   padding: 0 12px;
   display: flex;
@@ -206,7 +206,7 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background: #0063A7;
+    background: var(--primary-color) !important;
     color: white;
   }
 }

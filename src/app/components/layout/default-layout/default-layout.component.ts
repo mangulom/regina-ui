@@ -210,7 +210,7 @@ export class DefaultLayoutComponent implements OnInit {
       this.saludoInicialMostrado = true;
 
     } else {
-
+      console.log("Texto ", texto)
       this.wrapperRequestIA.mensaje = texto;
       this.wrapperRequestIA.userUserName = 'mangulom';
       this.wrapperRequestIA.anoPeriodo = sessionStorage.getItem('periodo_year') || '';
@@ -237,6 +237,10 @@ export class DefaultLayoutComponent implements OnInit {
                   ['/list-usuarios'],
                   { state: { data: this.retorno } }
                 );
+                break;
+
+              case 'usuario_true':
+                this.router.navigate(['/edit-usuario']);
                 break;
             }
 

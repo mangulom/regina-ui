@@ -44,6 +44,7 @@ export class DefaultHeaderComponent implements OnInit {
   years: number[] = [];
   selectedMonth: number;
   selectedYear: number;
+  currentDate: string = ("Lima, " + (new Date()).getDate() + " de " + this.meses[(new Date()).getMonth()].nombre + " de " + (new Date()).getFullYear()).toUpperCase();
 
   private subscription: Subscription = new Subscription();
 
