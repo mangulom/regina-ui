@@ -220,9 +220,12 @@ export class ListOrdenPagoComponent implements OnInit, OnDestroy {
     );
   }
 
-  openEditOrdenPago(orden: OrdenPago) {
-    console.log('Orden de Pago a editar:', orden);
-    this.router.navigate(['/edit-order'], { state: { data: orden } });
+  openEditRendirCuenta(orden: OrdenPago) {
+    this.router.navigate(['/edit-rendir-cuenta'], { state: { data: orden } });
+  }
+
+  viewOrdenesPagoDet(orden: OrdenPago) {
+    this.router.navigate(['/list-orders-detail'], { state: { data: orden } });
   }
 
   filtrarOrdenPago() {

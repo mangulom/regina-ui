@@ -1,11 +1,8 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
-
 import Tesseract from 'tesseract.js';
-
 import { OrdenPago } from '../../../models/orden-pago';
 import { OcrService } from '../../../services/ocr.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
@@ -18,7 +15,6 @@ import { Router } from '@angular/router';
 import { PadronRuc } from '../../../models/padron-ruc';
 import { RegRenValidateService } from '../../../services/reg-ren-validate.service';
 import { RegRenValidate } from '../../../models/reg-ren-validate';
-
 
 export class ItemDetalle {
   descripcion?: string;
@@ -37,8 +33,9 @@ export class DatosImagen {
   items: ItemDetalle[] = [];
   currency?: string;
 }
+
 @Component({
-  selector: 'app-edit-orden-pago',
+  selector: 'app-edit-rendir-cuenta',
   standalone: true,
   imports: [
     CommonModule,
@@ -47,10 +44,11 @@ export class DatosImagen {
     LoadingDancingSquaresComponent,
     NgxCurrencyDirective
   ],
-  templateUrl: './edit-orden-pago.component.html',
-  styleUrls: ['./edit-orden-pago.component.scss']
+  templateUrl: './edit-rendir-cuenta.component.html',
+  styleUrl: './edit-rendir-cuenta.component.scss'
 })
-export class EditOrdenPagoComponent implements OnInit {
+
+export class EditRendirCuentaComponent implements OnInit {
 
   constructor(
     private location: Location,
@@ -316,3 +314,4 @@ export class EditOrdenPagoComponent implements OnInit {
     }
   }
 }
+

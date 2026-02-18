@@ -3,46 +3,31 @@
 </div>
 <div class="container mt-2">
   <div class="bar-buttons-top">
-    <div class="title-f6">Lista de Órdenes de Pago</div>
+    <div class="title-f6">Detalle de Rendición - Orden de Pago: {{orden.numOrden}} del {{orden.fecOrden | date: 'dd/MM/yyyy'}}</div>
   </div>
   <div class="bar-buttons-top d-flex w-100">
     <div class="input-group justify-content-start w-50">
       <span class="input-group-text"><i class="fa fa-search me-2"></i></span>
-      <input (input)="filtrarOrdenPago()" type="text" class="form-control" placeholder="Filtrar Órdenes..."
-        [(ngModel)]="filtrarOrden" />
+      <input (input)="filtrar()" type="text" class="form-control" placeholder="Filtrar..."
+        [(ngModel)]="filtrarDetalle" />
     </div>
     <button (click)="onBack()" class="general-button btn-secondary">
       <i class="fas fa-arrow-left"></i>
       Regresar
     </button>
   </div>
-  <div class="table-container table-responsive">
+    <div class="table-container table-responsive">
     <table class="table global-table table-striped table-hover">
       <thead>
         <th class="text-center">Nro de Orden</th>
-        <th *ngIf="isAdminUser" class="text-center">Auxiliar</th>
-        <th class="text-center">Fecha de Orden</th>
-        <th class="text-center">Tipo de Gasto</th>
-        <th class="text-center">Moneda</th>
-        <th class="text-center">Importe</th>
-        <th class="text-center">Estado</th>
-        <th class="text-center">Acciones</th>
+        <th class="text-center">Item</th>
+        <th class="text-center">Fecha</th>
       </thead>
       <tbody>
-        <tr *ngFor="let reg of pagedOrdenes">
+        <tr *ngFor="let reg of pagedDetalles">
           <td class="text-center">{{reg.numOrden}}</td>
-          <td *ngIf="isAdminUser" class="text-start">{{reg.cdesAuxiliar}}</td>
-          <td class="text-center">{{reg.fecOrden | date: 'yyyy-MM-dd'}}</td>
-          <td class="text-start">{{reg.cdesTipoGasto}}</td>
-          <td class="text-center">{{reg.cdesMoneda}}</td>
-          <td class="text-end">{{reg.impOrdPago | number: '1.2-2'}}</td>
-          <td class="text-center">{{reg.tipEstado}}</td>
-          <td class="text-center">
-            <button (click)="openEditRendirCuenta(reg)" type="button" title="Rendir cuenta" type="button"
-              class="btn btn-success btn-sm me-1"><i class="fa fa-plus"></i></button>
-            <button (click)="viewOrdenesPagoDet(reg)" style="background-color: #0063A7;" title="Ver Detalle" type="button"
-              class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
-          </td>
+          <td class="text-start">{{reg.numItemOp}}</td>
+          <td class="text-center">{{reg.fecDet | date: 'yyyy-MM-dd'}}</td>
         </tr>
       </tbody>
     </table>

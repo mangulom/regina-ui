@@ -1,0 +1,29 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { WrapperRequestOrdenPago } from '../models/wrappers/wrapper-request-orden-pago';
+import { Response } from '../models/response';
+import { WrapperRequestOrdenPagoDet } from '../models/wrappers/wrapper-request-orden-pago-det';
+@Injectable({
+  providedIn: 'root'
+})
+export class OrdenPagoDetService {
+
+  constructor(private http: HttpClient) { }
+
+  token = sessionStorage.getItem('authToken');
+  private apiUrlProcess: string = environment.apiUrlProcess;
+
+  getOrdenesPagoDet(wrapper: WrapperRequestOrdenPagoDet): Observable<Response> {
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<Response>(`${this.apiUrlProcess}orden-pago-det/listar/${wrapper.codEmpresa}/${wrapper.codSucursal}/${wrapper.numOrden}`, {
+      headers,
+      responseType: 'json'
+    });
+  }
+}
