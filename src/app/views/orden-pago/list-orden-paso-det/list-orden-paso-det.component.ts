@@ -50,7 +50,6 @@ export class ListOrdenPagoDetComponent implements OnInit {
   currentPage = 0;
   totalItems = 0;
   totalPages = 0;
-
   detalles: OrdenPagoDet[] = [];
   ordenesGeneral: OrdenPagoDet[] = [];
   pagedDetalles: OrdenPagoDet[] = [];

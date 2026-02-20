@@ -231,6 +231,7 @@ export class EditRendirCuentaComponent implements OnInit {
           if (issuerRuc) {
             this.ruc = Array.isArray(issuerRuc) ? issuerRuc[0] : issuerRuc;
           }
+          console.log("El ruc verdadero ", this.ruc);
           this.dataImagen.issuerAddress = response.detectedData.issuerAddress;
           this.dataImagen.documentDate = response.detectedData.documentDate;
           this.dataImagen.amount = response.detectedData.amount;
@@ -241,6 +242,7 @@ export class EditRendirCuentaComponent implements OnInit {
             this.detalle += this.dataImagen.items[e].descripcion;
           }
           this.onGetDatosRuc();
+          this.validateRules();
           this.loadingService.hide();
         }
       },
