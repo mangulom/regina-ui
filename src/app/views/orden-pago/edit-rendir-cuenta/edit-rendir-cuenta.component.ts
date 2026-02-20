@@ -215,6 +215,7 @@ export class EditRendirCuentaComponent implements OnInit {
             this.detalle += this.dataImagen.items[e].descripcion + '\n';
           }
           this.onGetDatosRuc();
+          this.validateRules();
           this.loadingService.hide();
         }
       },
