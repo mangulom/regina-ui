@@ -36,6 +36,11 @@ export class DatosImagen {
   currency?: string;
 }
 
+export class TypeMovement {
+  idMovement?: number;
+  detMovement?: string;
+}
+
 @Component({
   selector: 'app-edit-rendir-cuenta',
   standalone: true,
@@ -79,8 +84,10 @@ export class EditRendirCuentaComponent implements OnInit {
   mensaje: string = "";
   padronRuc: PadronRuc = new PadronRuc();
   reglas: RegRenValidate[] = [];
-
+  typeMovements: TypeMovement[] = [{idMovement: 1, detMovement: "Alimentación"}, {idMovement: 2, detMovement: "Transpporte"}]
+  TypeMovement: TypeMovement = new TypeMovement();
   ngOnInit(): void {
+    this.TypeMovement = this.typeMovements[0];
     const state = history.state;
     if (state && state.data) {
       this.orden = state.data;

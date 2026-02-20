@@ -20,9 +20,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.headers.has('Skip-Interceptor')) {
+/*     if (req.headers.has('Skip-Interceptor')) {
       return next.handle(req);
-    }
+    } */
 
     const token = sessionStorage.getItem('authToken');
     if (token) {

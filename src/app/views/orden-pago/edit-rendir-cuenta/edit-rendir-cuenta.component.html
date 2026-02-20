@@ -79,6 +79,14 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <select name="typemovement" id="typemovement"  class="form-select" [(ngModel)]="TypeMovement.idMovement">
+                <option *ngFor="let tm of typeMovements" [value]="tm.idMovement">{{tm.detMovement}}</option>
+            </select>
+        </div>
+    </div>
+
     <h6 class="h6-header">DATOS DEL DOCUMENTO</h6>
 
     <div class="row mt-2">
