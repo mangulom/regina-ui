@@ -9,11 +9,6 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>
         <mat-dialog-actions class="d-flex justify-content-end gap-2">
         <button
-            class="general-button btn-primary me-1"
-            (click)="onConfirm()">
-            Aceptar
-        </button>
-        <button
             class="general-button btn-danger"
             (click)="onCancel()">
             Cancelar
@@ -26,10 +21,6 @@ export class ConfirmDialogComponent {
         public dialogRef: MatDialogRef<ConfirmDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string }
     ) { }
-
-    onConfirm(): void {
-        this.dialogRef.close(true);
-    }
 
     onCancel(): void {
         this.dialogRef.close(false);

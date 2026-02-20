@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpErrorResponse
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -19,9 +19,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private router: Router) { }
 
-intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = sessionStorage.getItem('authToken');
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.headers.has('Skip-Interceptor')) {
+      return next.handle(req);
+    }
 
+    const token = sessionStorage.getItem('authToken');
     if (token) {
       const expirationDate = this.decodeToken(token);
       if (expirationDate && expirationDate < new Date()) {
@@ -36,6 +39,8 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
       });
     }
 
+
+
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         switch (error.status) {
@@ -49,7 +54,7 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
             Swal.fire('Acceso denegado', 'No tienes permisos para realizar esta acción.', 'warning');
             break;
           case 404:
-            Swal.fire('Recurso no encontrado', 'El recurso solicitado no existe.', 'info');
+            Swal.fire('Recurso no encontrado', 'El recurso solicitado no existe.', 'error');
             break;
           case 500:
             Swal.fire('Error del servidor', 'Ocurrió un error interno. Inténtalo más tarde.', 'error');

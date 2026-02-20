@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { PadronRuc } from '../../../models/padron-ruc';
 import { RegRenValidateService } from '../../../services/reg-ren-validate.service';
 import { RegRenValidate } from '../../../models/reg-ren-validate';
+import { ConfirmDialogComponent } from '../../../components/dialogs/confirm-dialog-component';
+import { MatDialog } from '@angular/material/dialog';
 
 export class ItemDetalle {
   descripcion?: string;
@@ -42,7 +44,8 @@ export class DatosImagen {
     FormsModule,
     ImageCropperComponent,
     LoadingDancingSquaresComponent,
-    NgxCurrencyDirective
+    NgxCurrencyDirective,
+    ConfirmDialogComponent
   ],
   templateUrl: './edit-rendir-cuenta.component.html',
   styleUrl: './edit-rendir-cuenta.component.scss'
@@ -56,7 +59,8 @@ export class EditRendirCuentaComponent implements OnInit {
     private loadingService: LoadingService,
     private sunatService: SunatService,
     private router: Router,
-    private regRenValidateService: RegRenValidateService
+    private regRenValidateService: RegRenValidateService,
+    private dialog: MatDialog
   ) {
     this.isLoading$ = this.loadingService.loading$;
   }
@@ -149,7 +153,6 @@ export class EditRendirCuentaComponent implements OnInit {
       (response: Response) => {
         if (response.error == 0) {
           this.padronRuc = response.resultado;
-          console.log("Padrón RUC ", this.padronRuc);
           this.mensaje = "";
           if (this.padronRuc.estado !== 'ACTIVO') {
             this.mensaje += 'EL CONTRIBUYENTE NO SE ENCUENTRA ACTIVO';
@@ -173,7 +176,22 @@ export class EditRendirCuentaComponent implements OnInit {
         }
       },
       (error) => {
-        console.log("No se pudieron obtener los datos del Contribuyente");
+        this.validate = false;
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '280px',
+          data: {
+            title: 'Error',
+            message: 'El RUC no existe'
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+          if (!result) {
+            return;
+          }
+
+        });
       }
     )
   }
@@ -201,9 +219,10 @@ export class EditRendirCuentaComponent implements OnInit {
           this.dataImagen.documentType = response.detectedData.documentType;
           this.dataImagen.documentNumber = response.detectedData.documentNumber;
           this.dataImagen.issuerName = response.detectedData.issuerName;
-          this.dataImagen.issuerRuc = response.detectedData.issuerRuc;
-          if (this.dataImagen.issuerRuc) {
-            this.ruc = this.dataImagen.issuerRuc[0];
+          const issuerRuc = response.detectedData.issuerRuc;
+          this.dataImagen.issuerRuc = issuerRuc;
+          if (issuerRuc) {
+            this.ruc = Array.isArray(issuerRuc) ? issuerRuc[0] : issuerRuc;
           }
           this.dataImagen.issuerAddress = response.detectedData.issuerAddress;
           this.dataImagen.documentDate = response.detectedData.documentDate;
@@ -211,8 +230,8 @@ export class EditRendirCuentaComponent implements OnInit {
           this.dataImagen.documentCurrency = response.detectedData.documentCurrency;
           this.dataImagen.items = response.detectedData.items;
           this.detalle = "";
-          for (let e = 0; e < this.dataImagen.items.length; e++) {
-            this.detalle += this.dataImagen.items[e].descripcion + '\n';
+          for (let e = 0; e < this.dataImagen.items?.length; e++) {
+            this.detalle += this.dataImagen.items[e].descripcion;
           }
           this.onGetDatosRuc();
           this.loadingService.hide();

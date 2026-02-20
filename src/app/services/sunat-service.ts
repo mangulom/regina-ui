@@ -17,7 +17,8 @@ export class SunatService {
         console.log("RUC", buscarruc)
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${this.token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Skip-Interceptor': 'true'
         });
         return this.http.get<Response>(`${this.apiUrlUtils}ruc/${buscarruc}`, {
             headers,
